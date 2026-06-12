@@ -1,0 +1,1 @@
+A full-stack AI-powered Project Feasibility Analyzer featuring JWT authentication, AI-driven risk assessment, analysis history tracking, analytics dashboard, risk categorization, and PDF report generation with a modern SaaS-style user interface.
