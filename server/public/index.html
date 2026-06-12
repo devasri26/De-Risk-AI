@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Prevent software engineering failure triggers before they reach production. De-Risk AI evaluates concept architectures and db choices." />
+  <title>De-Risk AI — Enterprise Conceptual Diagnostics Console</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2280%22>🛡️</text></svg>">
+</head>
+<body class="landing-page">
+
+  <!-- Ambient Glowing Background Circles -->
+  <div class="ambient-glow-orb glow-indigo" style="opacity: 0.15; filter: blur(140px); width: 600px; height: 600px; top: -10%; left: -10%;"></div>
+  <div class="ambient-glow-orb glow-rose" style="opacity: 0.08; filter: blur(140px); width: 500px; height: 500px; top: 40%; right: -5%;"></div>
+  <div class="ambient-glow-orb glow-cyan" style="opacity: 0.06; filter: blur(120px); width: 450px; height: 450px; bottom: 5%; left: 5%;"></div>
+
+  <!-- Drifting Particle Layer -->
+  <div class="particle p-1"></div>
+  <div class="particle p-2"></div>
+  <div class="particle p-3"></div>
+  <div class="particle p-4"></div>
+  <div class="particle p-5"></div>
+  <div class="particle p-6"></div>
+  <div class="particle p-7"></div>
+  <div class="particle p-8"></div>
+
+  <!-- Header Navigation -->
+  <header class="landing-header">
+    <div class="landing-nav-container">
+      <div class="landing-brand">
+        <div class="brand-logo" title="De-Risk AI Logo" style="width: 32px; height: 32px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          </svg>
+        </div>
+        <h2 class="brand-title" style="font-size: 1.1rem; font-weight: 800; color: #ffffff;">De-Risk <span class="accent-text">AI</span></h2>
+      </div>
+
+      <nav class="landing-nav-links">
+        <a href="#features" class="nav-link-item">Features</a>
+        <a href="#how-it-works" class="nav-link-item">How It Works</a>
+        <a href="#stats" class="nav-link-item">Metrics</a>
+      </nav>
+
+      <div class="landing-nav-actions">
+        <a href="login.html" class="btn-nav-secondary">Sign In</a>
+        <button class="btn-nav-primary btn-get-started-flow">Launch Console</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Viewport -->
+  <section class="landing-hero scroll-fade-in visible">
+    <div class="hero-content">
+      <span class="hero-badge animate-pulse">🛡️ Next-Gen Conceptual Risk Intelligence</span>
+      <h1 class="hero-title">
+        Audit Software Concepts <br>
+        <span class="accent-text">Before Coding Begins</span>
+      </h1>
+      <p class="hero-desc">
+        De-Risk AI runs conceptual diagnostics on your architecture, database designs, and project ideas. Detect blockers, map mitigation matrices, and secure viability in seconds.
+      </p>
+      
+      <div class="hero-actions">
+        <button class="btn-hero-primary btn-get-started-flow">Start Free Audit</button>
+        <a href="login.html" class="btn-hero-secondary">Sign In to Console</a>
+      </div>
+    </div>
+
+    <!-- Interface Preview Card Mockup -->
+    <div class="hero-preview-container scroll-fade-in" style="animation-delay: 200ms;">
+      <div class="glass-card preview-card">
+        <div class="preview-header">
+          <div class="preview-window-controls">
+            <span class="window-dot red"></span>
+            <span class="window-dot amber"></span>
+            <span class="window-dot green"></span>
+          </div>
+          <div class="preview-window-title">Console Preview — B2B Support Router</div>
+        </div>
+        
+        <div class="preview-body">
+          <div class="preview-stats-row">
+            <div class="preview-mini-stat">
+              <span class="p-label">Feasibility Rating</span>
+              <span class="p-value text-emerald">82% Feasible</span>
+            </div>
+            <div class="preview-mini-stat">
+              <span class="p-label">Architecture Blockers</span>
+              <span class="p-value text-rose">2 Identified</span>
+            </div>
+            <div class="preview-mini-stat">
+              <span class="p-label">Execution Time</span>
+              <span class="p-value text-amber">0.4s Scanned</span>
+            </div>
+          </div>
+          
+          <div class="preview-content-box">
+            <div class="preview-bar-track"><div class="preview-bar-fill" style="width: 82%;"></div></div>
+            <div class="preview-risk-item">
+              <span class="badge-pill badge-rose" style="padding: 1px 6px; font-size: 0.6rem;">HIGH</span>
+              <span class="preview-risk-text">Real-time ticketing rate-limiting concurrency leak under spikes.</span>
+            </div>
+            <div class="preview-risk-item">
+              <span class="badge-pill badge-amber" style="padding: 1px 6px; font-size: 0.6rem;">MED</span>
+              <span class="preview-risk-text">Database connection depletion due to long-running router queries.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Cards Section -->
+  <section class="landing-section" id="features">
+    <div class="section-header scroll-fade-in">
+      <span class="section-tag">System Capabilities</span>
+      <h2 class="section-main-title">Professional Architecture Audit Suite</h2>
+      <p class="section-desc">Four specialized modules engineered to de-risk production cycles.</p>
+    </div>
+
+    <div class="features-grid scroll-fade-in">
+      
+      <!-- Feature Card 1 -->
+      <div class="glass-card feature-card">
+        <div class="feature-icon-box text-rose" style="background: rgba(244, 63, 94, 0.1);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+        </div>
+        <h3 class="feature-card-title">AI Risk Detection</h3>
+        <p class="feature-card-desc">Evaluates conceptual logic, database scale factors, and third-party API dependencies to identify failure triggers beforehand.</p>
+      </div>
+
+      <!-- Feature Card 2 -->
+      <div class="glass-card feature-card">
+        <div class="feature-icon-box text-emerald" style="background: rgba(16, 185, 129, 0.1);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+        </div>
+        <h3 class="feature-card-title">Confidence Score Heuristics</h3>
+        <p class="feature-card-desc">Computes real-time feasibility ratings mapped to standard startup survival benchmarks to gauge structural integrity.</p>
+      </div>
+
+      <!-- Feature Card 3 -->
+      <div class="glass-card feature-card">
+        <div class="feature-icon-box text-indigo" style="background: rgba(99, 102, 241, 0.1);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="9"></rect>
+            <rect x="14" y="3" width="7" height="5"></rect>
+            <rect x="14" y="12" width="7" height="9"></rect>
+            <rect x="3" y="16" width="7" height="5"></rect>
+          </svg>
+        </div>
+        <h3 class="feature-card-title">Analysis History</h3>
+        <p class="feature-card-desc">Caches reports locally on your browser. Easily search, sort, and re-examine diagnostic outputs at any time.</p>
+      </div>
+
+      <!-- Feature Card 4 -->
+      <div class="glass-card feature-card">
+        <div class="feature-icon-box text-cyan" style="background: rgba(6, 182, 212, 0.1);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+          </svg>
+        </div>
+        <h3 class="feature-card-title">PDF Report Generation</h3>
+        <p class="feature-card-desc">Generates presentation-ready PDF action summaries for technical leads, engineering staff, and investors.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section class="landing-section" id="how-it-works">
+    <div class="section-header scroll-fade-in">
+      <span class="section-tag">Operation Pipeline</span>
+      <h2 class="section-main-title">Modern Diagnostic Timeline</h2>
+      <p class="section-desc">How De-Risk AI builds architecture checks from plain English parameters.</p>
+    </div>
+
+    <!-- Timeline Cards Grid -->
+    <div class="steps-grid scroll-fade-in">
+      
+      <!-- Step 1 -->
+      <div class="timeline-step">
+        <div class="timeline-number-circle">1</div>
+        <div class="glass-card step-card">
+          <h4 class="step-title">Enter Project Concept</h4>
+          <p class="step-desc">Describe your scaling proposal, system components, or server setup in regular plain text description fields.</p>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="timeline-step">
+        <div class="timeline-number-circle">2</div>
+        <div class="glass-card step-card">
+          <h4 class="step-title">Neural Diagnostics</h4>
+          <p class="step-desc">AI engines map system blueprints, concurrency pitfalls, data structures, and third-party vulnerabilities.</p>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="timeline-step">
+        <div class="timeline-number-circle">3</div>
+        <div class="glass-card step-card">
+          <h4 class="step-title">Feasibility Feedback</h4>
+          <p class="step-desc">Access confidence gauges and detailed mitigation matrices addressing isolated scaling challenges.</p>
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="timeline-step">
+        <div class="timeline-number-circle">4</div>
+        <div class="glass-card step-card">
+          <h4 class="step-title">Export PDF Audit</h4>
+          <p class="step-desc">Download project diagnostics and share structured action blueprints directly with stakeholders.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Statistics Counters Section -->
+  <section class="landing-section stats-section" id="stats">
+    <div class="stats-grid-landing scroll-fade-in">
+      
+      <div class="stat-card-landing">
+        <span class="stat-number" data-target="14284" data-suffix="+">0</span>
+        <span class="stat-label">Projects Analyzed</span>
+      </div>
+
+      <div class="stat-card-landing">
+        <span class="stat-number" data-target="9840" data-suffix="+">0</span>
+        <span class="stat-label">Reports Generated</span>
+      </div>
+
+      <div class="stat-card-landing">
+        <span class="stat-number" data-target="12150" data-suffix="+">0</span>
+        <span class="stat-label">Vulnerabilities Deflected</span>
+      </div>
+
+      <div class="stat-card-landing">
+        <span class="stat-number" data-target="98.6" data-suffix="%" data-decimal="true">0</span>
+        <span class="stat-label">Accuracy Heuristics</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Testimonials Cards Section -->
+
+  <!-- CTA Section -->
+  <section class="landing-section cta-section scroll-fade-in">
+    <div class="cta-card">
+      <div class="glow-orb" style="top: -20px; right: -20px; opacity: 0.15; filter: blur(50px);"></div>
+      <h2 class="cta-title">Audit Your Next Project Concept Today</h2>
+      <p class="cta-desc">Initialize technical diagnostics, compile vulnerability reports, and secure feasibility indexes before deployment.</p>
+      
+      <div class="cta-actions">
+        <button class="btn-primary btn-get-started-flow" style="padding: 0.95rem 2.25rem;">Start Free Audit</button>
+        <a href="signup.html" class="btn-secondary-glow">Create Account</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="landing-footer scroll-fade-in">
+    <div class="footer-grid">
+      <div class="footer-brand-col">
+        <div class="landing-brand" style="margin-bottom: 0.75rem;">
+          <div class="brand-logo" style="width: 26px; height: 26px;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            </svg>
+          </div>
+          <h2 class="brand-title" style="font-size: 0.95rem;">De-Risk <span class="accent-text">AI</span></h2>
+        </div>
+        <p class="footer-desc-text">Professional-grade architecture diagnostic console for software teams and developers.</p>
+      </div>
+
+      <div class="footer-links-col">
+        <h4 class="footer-col-title">Navigation</h4>
+        <a href="#features" class="footer-link">Features</a>
+        <a href="#how-it-works" class="footer-link">Timeline</a>
+        <a href="#stats" class="footer-link">Metrics</a>
+      </div>
+
+      <div class="footer-links-col">
+        <h4 class="footer-col-title">Workspace</h4>
+        <a href="login.html" class="footer-link">Console Login</a>
+        <a href="signup.html" class="footer-link">Signup Workspace</a>
+        <a href="dashboard.html" class="footer-link">Member Area</a>
+      </div>
+
+    </div>
+
+    <div class="footer-copyright">
+      <p>© 2026 De-Risk AI. All rights reserved. Enterprise Conceptual Diagnostics Console.</p>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // 1. Scroll Fade In Animation
+      const faders = document.querySelectorAll(".scroll-fade-in");
+      const appearOptions = {
+        threshold: 0.1,
+        rootMargin: "0px 0px -40px 0px"
+      };
+
+      const appearOnScroll = new IntersectionObserver((entries, appearOnScroll) => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("visible");
+          appearOnScroll.unobserve(entry.target);
+        });
+      }, appearOptions);
+
+      faders.forEach(fader => {
+        appearOnScroll.observe(fader);
+      });
+
+      // 2. Count-Up Animation for Statistics
+      const stats = document.querySelectorAll(".stat-number");
+      const countOptions = {
+        threshold: 0.5
+      };
+
+      const countUp = (element) => {
+        const target = parseFloat(element.getAttribute("data-target"));
+        const suffix = element.getAttribute("data-suffix") || "";
+        const isDecimal = element.getAttribute("data-decimal") === "true";
+        const duration = 1500; // 1.5 seconds
+        const stepTime = 30;
+        const totalSteps = duration / stepTime;
+        const increment = target / totalSteps;
+        
+        let current = 0;
+        let step = 0;
+
+        const timer = setInterval(() => {
+          step++;
+          current += increment;
+          if (step >= totalSteps) {
+            clearInterval(timer);
+            element.innerText = isDecimal ? target.toFixed(1) + suffix : Math.floor(target).toLocaleString() + suffix;
+          } else {
+            element.innerText = isDecimal ? current.toFixed(1) + suffix : Math.floor(current).toLocaleString() + suffix;
+          }
+        }, stepTime);
+      };
+
+      const statsObserver = new IntersectionObserver((entries, statsObserver) => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          const numbers = entry.target.querySelectorAll(".stat-number");
+          numbers.forEach(num => countUp(num));
+          statsObserver.unobserve(entry.target);
+        });
+      }, countOptions);
+
+      const statsSection = document.querySelector(".stats-section");
+      if (statsSection) {
+        statsObserver.observe(statsSection);
+      }
+      
+      // Get Started Button Action: Redirect to Dashboard if logged in, else to Signup
+      const getStartedBtns = document.querySelectorAll(".btn-get-started-flow");
+      getStartedBtns.forEach(btn => {
+        btn.addEventListener("click", () => {
+          const token = localStorage.getItem("token");
+          const user = localStorage.getItem("user");
+          if (token && user) {
+            window.location.href = "dashboard.html";
+          } else {
+            window.location.href = "signup.html";
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

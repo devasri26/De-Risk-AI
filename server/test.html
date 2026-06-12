@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AI Project</title>
+</head>
+<body>
+
+<h2>AI Project Analyzer</h2>
+
+<input id="idea" placeholder="Enter idea" />
+<button onclick="run()">Check</button>
+
+<pre id="out"></pre>
+
+<script>
+async function run() {
+  const idea = document.getElementById("idea").value;
+
+  const res = await fetch("http://localhost:5001/api/project/analyze", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ idea })
+  });
+
+  const data = await res.json();
+
+  document.getElementById("out").innerText =
+    JSON.stringify(data, null, 2);
+}
+</script>
+
+</body>
+</html>

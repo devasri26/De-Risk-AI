@@ -1,0 +1,44 @@
+[
+  {
+    "id": "1781252757854kc6vf24",
+    "email": "test@company.com",
+    "password": "$2a$10$ZE30JdcM.6TieqaGOf3oNeUnOptIs7G.WFSQr4qpR60c03uBnxway",
+    "createdAt": "2026-06-12T08:25:57.854Z"
+  },
+  {
+    "id": "1781252860544nai9l2c",
+    "email": "testuser2@company.com",
+    "password": "$2a$10$B4srtcy/ukzUnxN0aytsMOP0zhzxPbW4.yhAfNg9JGCT9zgNCziR.",
+    "createdAt": "2026-06-12T08:27:40.544Z"
+  },
+  {
+    "id": "1781253095870twonsuh",
+    "email": "23cs016@drngpit.ac.in",
+    "password": "$2a$10$cgV8UG6v1TIpYsynlVAQouog.pe0x9ZCOEp3hQl3VH5ZPMcrXqXEe",
+    "createdAt": "2026-06-12T08:31:35.870Z"
+  },
+  {
+    "id": "1781266372958nry8dcb",
+    "email": "tester@example.com",
+    "password": "$2a$10$Hojsh7UfavGeuohtfoLAj.52XRSwG3Kl6MZf.VnPsX1GjL1UBuJYS",
+    "createdAt": "2026-06-12T12:12:52.958Z"
+  },
+  {
+    "id": "1781279895191md47bb5",
+    "email": "gdevasri26@gmail.com",
+    "password": "$2a$10$9RCs4D8ZQUMjUTCozXgmQ.3nTd94fqv7/9gTsxW5jhe1onm83dTPa",
+    "createdAt": "2026-06-12T15:58:15.191Z"
+  },
+  {
+    "id": "17812833996918vx3ier",
+    "email": "qa_tester@company.com",
+    "password": "$2a$10$X9/0Jrn9SCmAqMJDq89tyubdeiTiHmbqDgzdu99k06Bp5FGY5he1W",
+    "createdAt": "2026-06-12T16:56:39.691Z"
+  },
+  {
+    "id": "1781285305439rir7epg",
+    "email": "23cs089@drngpit.ac.in",
+    "password": "$2a$10$vcn0SfmfipuBR3HovM4JYezNVWhF.R/ZauVQx1nKQVB5tNgUofJAa",
+    "createdAt": "2026-06-12T17:28:25.439Z"
+  }
+]

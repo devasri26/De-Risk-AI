@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Stripe/Linear-grade AI conceptual diagnostic console." />
+  <title>De-Risk AI — Enterprise Diagnostic Console</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2280%22>🛡️</text></svg>">
+  
+  <!-- Chart.js CDN integration -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <!-- jsPDF CDN integration -->
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  
+  <!-- Zero-Flicker Head Route Guard -->
+  <script>
+    (function() {
+      const token = localStorage.getItem("token");
+      const user = localStorage.getItem("user");
+      if (!token || !user) {
+        window.location.href = "login.html";
+      }
+    })();
+  </script>
+</head>
+<body>
+
+  <!-- Full screen Layout Wrapper -->
+  <div class="app-container">
+    
+    <!-- Collapsible Sidebar Panel -->
+    <aside class="sidebar-panel" id="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-logo" title="De-Risk AI Logo">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          </svg>
+        </div>
+        <div class="brand-info">
+          <h2 class="brand-title">De-Risk <span class="accent-text">AI</span></h2>
+          <span class="badge-ai-powered">Enterprise Console</span>
+        </div>
+        <!-- Collapse Sidebar Trigger -->
+        <button class="collapse-sidebar-btn" id="sidebar-collapse-btn" title="Collapse sidebar layout">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+        <!-- Mobile close button -->
+        <button class="mobile-close-btn" id="mobile-sidebar-close" title="Close navigation">
+          &times;
+        </button>
+      </div>
+
+      <!-- Main Navigation Menu -->
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-tab="dashboard" title="Dashboard Workspace">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="9"></rect>
+            <rect x="14" y="3" width="7" height="5"></rect>
+            <rect x="14" y="12" width="7" height="9"></rect>
+            <rect x="3" y="16" width="7" height="5"></rect>
+          </svg>
+          <span class="nav-item-text">Dashboard</span>
+        </button>
+        <button class="nav-item" data-tab="analytics" title="Analytics Metrics">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+          <span class="nav-item-text">Analytics</span>
+        </button>
+        <button class="nav-item" data-tab="documentation" title="API Documentation">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+          <span class="nav-item-text">Documentation</span>
+        </button>
+      </nav>
+
+      <!-- Sidebar History Area -->
+      <div class="sidebar-section">
+        <div class="sidebar-section-header">
+          <span class="sidebar-section-title">Audit History</span>
+          <button class="btn-clear-history" id="clear-history-btn" title="Clear all runs">Clear All</button>
+        </div>
+        <div class="history-list-container" id="history-sidebar-list">
+          <div class="history-empty-text">No reports logged.</div>
+        </div>
+      </div>
+
+      <!-- User Profile at bottom -->
+      <div class="sidebar-footer">
+        <div class="profile-card">
+          <div class="profile-avatar" id="user-avatar-initials">U</div>
+          <div class="profile-meta">
+            <span class="profile-name" id="user-display-email">loading...</span>
+            <span class="profile-role">Product Specialist</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Panel -->
+    <main class="main-panel">
+      
+      <!-- Top Navbar -->
+      <header class="top-navbar">
+        <div class="navbar-left">
+          <button class="mobile-toggle-btn" id="mobile-sidebar-toggle" title="Open navigation">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+          <div class="navbar-welcome">
+            <span class="welcome-text">Diagnostic Console</span>
+            <h1 class="welcome-heading" id="welcome-message">Console Loading...</h1>
+          </div>
+        </div>
+
+        <div class="navbar-right">
+          <span class="badge-status-glow">
+            <span class="status-dot-pulse"></span>
+            AI Engine Online
+          </span>
+          <button class="btn-logout" id="logout-btn" title="Sign out of console">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+              <polyline points="16 17 21 12 16 7" />
+              <line x1="21" y1="12" x2="9" y2="12" />
+            </svg>
+            <span>Logout</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Main Body Viewport -->
+      <div class="content-body">
+        
+        <!-- Tab 1: Dashboard Tab -->
+        <div class="tab-content active" id="tab-dashboard">
+          
+          <!-- System Statistics Cards Grid -->
+          <div class="stats-grid animate-fade-in">
+            <div class="stats-card">
+              <div class="stats-icon stats-blue">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+              </div>
+              <div class="stats-info">
+                <span class="stats-label">Total Audits Run</span>
+                <span class="stats-value" id="stats-total-audits">0</span>
+              </div>
+            </div>
+            
+            <div class="stats-card">
+              <div class="stats-icon stats-green">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="20" x2="18" y2="10"></line>
+                  <line x1="12" y1="20" x2="12" y2="4"></line>
+                  <line x1="6" y1="20" x2="6" y2="14"></line>
+                </svg>
+              </div>
+              <div class="stats-info">
+                <span class="stats-label">Avg Feasibility Score</span>
+                <span class="stats-value" id="stats-avg-score">0%</span>
+              </div>
+            </div>
+
+            <div class="stats-card">
+              <div class="stats-icon stats-red">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>
+                  <line x1="12" y1="8" x2="12" y2="12"></line>
+                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+              </div>
+              <div class="stats-info">
+                <span class="stats-label">Critical Vulnerabilities</span>
+                <span class="stats-value" id="stats-total-risks">0</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Analyzer Console Form Glass Card -->
+          <section class="glass-card form-panel animate-fade-in" style="animation-delay: 100ms;" id="input-section">
+            <div class="form-header">
+              <div class="glow-orb"></div>
+              <h2 class="form-title" id="typewriter-title">Audit Diagnostic Engine</h2>
+              <p class="form-description">
+                Input your software architecture and project concept. The cognitive engine will run diagnostic checks mapping critical structural risks, failure triggers, and operational mitigations.
+              </p>
+            </div>
+
+            <!-- Inline Error Banner -->
+            <div class="error-banner" id="error-banner" style="display: none;">
+              <div class="error-banner-content">
+                <svg class="error-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--rose-color)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="8" x2="12" y2="12"></line>
+                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+                <span class="error-message" id="error-message">An error occurred</span>
+              </div>
+              <button type="button" class="btn-error-close" id="error-close-btn">&times;</button>
+            </div>
+
+            <form id="analyze-form">
+              <div class="textarea-container">
+                <textarea
+                  class="textarea-field"
+                  id="project-idea"
+                  placeholder="Describe your project concept, e.g., 'An AI-driven real-time path planning application for freight logistics, utilizing live IoT GPS tracking and dynamic optimization overlays...'"
+                  required
+                ></textarea>
+                <div class="char-count-badge" id="char-count">0 characters</div>
+              </div>
+
+              <!-- Quick Suggestions Chips -->
+              <div class="prompt-suggestions-container">
+                <span class="suggestions-label">Try template presets:</span>
+                <div class="suggestion-chips">
+                  <button type="button" class="suggestion-chip" data-idea="An AI-powered B2B customer support routing engine that automatically handles high-volume ticketing using specialized agentic layers.">
+                    🎯 B2B Support Router
+                  </button>
+                  <button type="button" class="suggestion-chip" data-idea="A mobile application that uses on-device computer vision models to assess crop health and suggest irrigation metrics from smartphone photos.">
+                    🌾 On-Device Crop Diagnoser
+                  </button>
+                  <button type="button" class="suggestion-chip" data-idea="A real-time predictive maintenance system for industrial HVAC systems using high-frequency vibration IoT telemetry.">
+                    ⚡ Industrial HVAC System Telemetry
+                  </button>
+                </div>
+              </div>
+
+              <div class="form-actions">
+                <button class="btn-primary" type="submit" id="analyze-btn">
+                  <span>Execute Diagnostics</span>
+                  <svg class="chevron-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                  </svg>
+                  <div class="spinner-ring"></div>
+                </button>
+              </div>
+            </form>
+          </section>
+
+          <!-- Onboarding / Startup Panels (shown when no report is active) -->
+          <div class="onboarding-grid" id="dashboard-empty-state">
+            
+            <!-- Quick Actions Panel -->
+            <div class="glass-card empty-panel-child">
+              <h3 class="panel-child-title">Quick Actions</h3>
+              <p class="panel-child-desc">Shortcuts to manage local buffers and run platform tests.</p>
+              
+              <div class="action-buttons-list">
+                <button class="btn-action-shortcut" id="shortcut-load-demo">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                  </svg>
+                  <span>Load Demo Concept</span>
+                </button>
+                <button class="btn-action-shortcut" id="shortcut-clear-storage">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                  </svg>
+                  <span>Flush Local Logs</span>
+                </button>
+                <button class="btn-action-shortcut" id="shortcut-download-backup">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                  </svg>
+                  <span>Download Backup Log</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Activity Logs Feed -->
+            <div class="glass-card empty-panel-child">
+              <h3 class="panel-child-title">Activity Timeline</h3>
+              <p class="panel-child-desc">Real-time telemetry logging of local operations.</p>
+              
+              <div class="activity-feed-container" id="activity-log-feed">
+                <!-- Dynamic Activity Feeds -->
+                <div class="activity-feed-empty">Console initialized. Waiting for actions...</div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Recent Analyses History Section (visible when no report is active) -->
+          <div class="glass-card table-panel animate-fade-in" id="dashboard-recent-analyses" style="margin-top: 1.5rem;">
+            <div class="table-panel-header">
+              <div>
+                <h3 class="panel-child-title">Recent Analyses</h3>
+                <p class="panel-child-desc">Quickly browse and manage your latest conceptual scans.</p>
+              </div>
+              
+              <div class="table-actions">
+                <div class="search-container">
+                  <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                  </svg>
+                  <input type="text" class="search-input" id="dashboard-search-input" placeholder="Search recent runs...">
+                </div>
+                
+                <button class="btn-clear-history" id="dashboard-clear-all-btn" style="padding: 0.55rem 1rem; border: 1px solid var(--border-dim); border-radius: var(--radius-sm); font-size: 0.8rem; background: transparent; color: var(--rose-color); cursor: pointer; transition: var(--transition-fast);">
+                  Clear All History
+                </button>
+              </div>
+            </div>
+
+            <div class="table-responsive-container">
+              <table class="analytics-table">
+                <thead>
+                  <tr>
+                    <th>Project Concept Header</th>
+                    <th>Audit Date</th>
+                    <th>Feasibility Rating</th>
+                    <th style="text-align: right;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="dashboard-recent-table-body">
+                  <!-- Dynamic rows -->
+                  <tr>
+                    <td colspan="4" style="text-align: center; color: var(--text-dim); padding: 2.5rem 0;">
+                      No recent analyses found.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+
+          <!-- Advanced Cognitive Loading State -->
+          <section class="glass-card loader-panel" id="loading-section">
+            <div class="loader-visual">
+              <div class="spinner-glow-ring"></div>
+              <div class="spinner-core">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                </svg>
+              </div>
+            </div>
+            <h3 class="loader-text">Compiling Analytical Model</h3>
+            <p class="loader-sub">
+              Querying OpenRouter neural models...
+            </p>
+            
+            <div class="loader-steps">
+              <div class="loader-step" id="step-1">
+                <div class="step-indicator">
+                  <span class="step-indicator-dot"></span>
+                  <svg class="step-check-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                </div>
+                <span class="step-label">Establishing cognitive pipeline connection</span>
+              </div>
+              <div class="loader-step" id="step-2">
+                <div class="step-indicator">
+                  <span class="step-indicator-dot"></span>
+                  <svg class="step-check-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                </div>
+                <span class="step-label">Evaluating system architecture & model choices</span>
+              </div>
+              <div class="loader-step" id="step-3">
+                <div class="step-indicator">
+                  <span class="step-indicator-dot"></span>
+                  <svg class="step-check-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                </div>
+                <span class="step-label">Simulating deployment failure triggers</span>
+              </div>
+              <div class="loader-step" id="step-4">
+                <div class="step-indicator">
+                  <span class="step-indicator-dot"></span>
+                  <svg class="step-check-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                </div>
+                <span class="step-label">Synthesizing risk mitigation schemas</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- Loading Skeletons Overlay (Linear-style loading layout) -->
+          <div class="skeleton-wrapper" id="skeleton-loader" style="display: none;">
+            <div class="skeleton-header">
+              <div class="skeleton-title pulsing-bg"></div>
+              <div class="skeleton-pill pulsing-bg"></div>
+            </div>
+            <div class="skeleton-grid">
+              <div class="skeleton-card pulsing-bg"></div>
+              <div class="skeleton-card pulsing-bg"></div>
+              <div class="skeleton-card pulsing-bg"></div>
+            </div>
+            <div class="skeleton-line pulsing-bg"></div>
+            <div class="skeleton-line pulsing-bg" style="width: 70%;"></div>
+          </div>
+
+          <!-- Feasibility Diagnostic Report -->
+          <section class="results-wrapper" id="results-section">
+            
+            <div class="result-header">
+              <div class="result-title-section">
+                <span class="diagnostic-tag">Diagnostic Audit Report</span>
+                <h2 id="report-title" class="report-main-title">Concept Feasibility Output</h2>
+              </div>
+              
+              <div class="result-header-actions">
+                <button class="btn-outline" id="new-audit-btn">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                  </svg>
+                  <span>Audit New Concept</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Export Pill Actions -->
+            <div class="action-export-bar">
+              <button class="btn-action-pill" id="action-download-btn" title="Download report text file">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                <span>Download Report</span>
+              </button>
+
+              <button class="btn-action-pill" id="action-pdf-btn" title="Export as PDF file">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                  <rect x="6" y="14" width="12" height="8"></rect>
+                </svg>
+                <span>Print PDF</span>
+              </button>
+
+              <button class="btn-action-pill" id="action-pdf-download-btn" title="Download PDF Report">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <line x1="10" y1="9" x2="8" y2="9"></line>
+                </svg>
+                <span>Download PDF Report</span>
+              </button>
+            </div>
+
+            <!-- Row 1: Gauge/Confidence Progress + Failure Reasons -->
+            <div class="diagnostics-row">
+              
+              <!-- Confidence Progress Card -->
+              <div class="glass-card gauge-panel">
+                <h3 class="card-subtitle-main">Feasibility Rating</h3>
+                
+                <div class="progress-circle-wrapper">
+                  <div class="svg-container">
+                    <svg style="transform: rotate(-90deg); width: 100%; height: 100%;" viewBox="0 0 120 120">
+                      <circle class="svg-circle-bg" cx="60" cy="60" r="50" />
+                      <circle
+                        class="svg-circle-fill"
+                        id="gauge-fill"
+                        cx="60"
+                        cy="60"
+                        r="50"
+                        stroke-dasharray="314.159"
+                        stroke-dashoffset="314.159"
+                      />
+                    </svg>
+                    <div class="svg-score-label">
+                      <span class="score-number" id="score-display">0%</span>
+                      <span class="score-text">Confidence</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Horizontal Progress Bar Animation -->
+                <div class="linear-progress-wrapper">
+                  <div class="linear-progress-track">
+                    <div class="linear-progress-fill" id="progress-bar-fill"></div>
+                  </div>
+                </div>
+
+                <div class="badge-pill" id="score-badge">Calculating Rating...</div>
+              </div>
+
+              <!-- Primary Failure Reasons list -->
+              <div class="glass-card info-list-panel">
+                <h3 class="info-list-title">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--rose-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                  </svg>
+                  <span>Critical Failure Triggers</span>
+                </h3>
+                <p class="card-text">
+                  The neural assessment engine isolates these primary factors as critical project vulnerability points:
+                </p>
+                <div id="reasons-list" class="dynamic-reasons-list">
+                  <!-- Dynamic reasons -->
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Row 2: System Risks Cards Grid -->
+            <div class="section-container">
+              <h3 class="section-title">System Risk Breakdown</h3>
+              <div class="cards-grid" id="risks-grid">
+                <!-- Dynamic risk cards -->
+              </div>
+            </div>
+
+            <!-- Row 3: Actionable Challenges & Solutions -->
+            <div class="section-container">
+              <h3 class="section-title">Blockers & Mitigations</h3>
+              <div class="mitigation-grid" id="solutions-list">
+                <!-- Dynamic challenge solution mappings -->
+              </div>
+            </div>
+
+          </section>
+        </div>
+
+        <!-- Tab 2: Documentation Tab -->
+        <div class="tab-content" id="tab-documentation">
+          <section class="glass-card documentation-panel">
+            <h2 class="form-title" style="margin-bottom: 1rem;">Platform Documentation</h2>
+            <p class="card-text" style="margin-bottom: 2rem;">Welcome to the De-Risk AI diagnostic console. This guide introduces the platform's core functions and configuration keys.</p>
+            
+            <div class="doc-section">
+              <h3 class="doc-heading">📊 Overview & Core Engine</h3>
+              <p class="doc-text">De-Risk AI uses large language models configured via senior technical architect templates to audit startup ideas, code architectures, database scaling decisions, and security postures. It assesses structural failures before engineering teams write code.</p>
+            </div>
+
+            <div class="doc-section">
+              <h3 class="doc-heading">💡 Diagnostic Preset Prompts</h3>
+              <p class="doc-text">Presets demonstrate the engine's capabilities. Clicking any preset chip populates the input editor with structured parameters testing microservices scaling, crop health imaging telemetry, or industrial predictive algorithms.</p>
+            </div>
+
+            <div class="doc-section">
+              <h3 class="doc-heading">📝 Local Database & Export Files</h3>
+              <p class="doc-text">Every calculation is saved locally to your browser's persistent storage engine (`localStorage`). You can browse previous audits, open them instantly, or copy summaries formatted as Github Markdown tags. Use the browser print dialog to export a cleanly compiled PDF report.</p>
+            </div>
+          </section>
+        </div>
+
+        <!-- Tab 3: Analytics Tab -->
+        <div class="tab-content" id="tab-analytics">
+          
+          <!-- Analytics Top Stats Cards Grid (4 Top Cards) -->
+          <div class="stats-grid animate-fade-in">
+            <div class="stats-card">
+              <div class="stats-icon stats-blue">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+              </div>
+              <div class="stats-info">
+                <span class="stats-label">Total Analyses</span>
+                <span class="stats-value" id="analytics-total-audits">0</span>
+              </div>
+            </div>
+            
+            <div class="stats-card">
+              <div class="stats-icon stats-green">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="20" x2="18" y2="10"></line>
+                  <line x1="12" y1="20" x2="12" y2="4"></line>
+                  <line x1="6" y1="20" x2="6" y2="14"></line>
+                </svg>
+              </div>
+              <div class="stats-info">
+                <span class="stats-label">Avg Confidence</span>
+                <span class="stats-value" id="analytics-avg-score">0%</span>
+              </div>
+            </div>
+
+            <div class="stats-card">
+              <div class="stats-icon stats-red">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>
+                  <line x1="12" y1="8" x2="12" y2="12"></line>
+                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+              </div>
+              <div class="stats-info">
+                <span class="stats-label">High Risk Projects</span>
+                <span class="stats-value" id="analytics-high-risks">0</span>
+              </div>
+            </div>
+
+            <div class="stats-card">
+              <div class="stats-icon stats-emerald">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </div>
+              <div class="stats-info">
+                <span class="stats-label">Low Risk Projects</span>
+                <span class="stats-value" id="analytics-low-risks">0</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Charts and User Activity Grid -->
+          <div class="analytics-charts-grid animate-fade-in" style="animation-delay: 100ms;">
+            <!-- Charts Column -->
+            <div class="charts-column">
+              <div class="glass-card chart-panel">
+                <h3 class="panel-child-title">Confidence Rating Trend</h3>
+                <p class="panel-child-desc">Historical timeline of concept audits confidence progression.</p>
+                <div class="chart-canvas-container">
+                  <canvas id="trendChart"></canvas>
+                </div>
+              </div>
+
+              <div class="glass-card chart-panel">
+                <h3 class="panel-child-title">Risk Severity Distribution</h3>
+                <p class="panel-child-desc">Distribution breakdown of identified high, medium, and low risks.</p>
+                <div class="chart-canvas-container">
+                  <canvas id="distributionChart"></canvas>
+                </div>
+              </div>
+            </div>
+
+            <!-- User Activity Sidebar Column -->
+            <div class="glass-card empty-panel-child activity-sidebar-column">
+              <h3 class="panel-child-title">User Account Telemetry</h3>
+              <p class="panel-child-desc">Summary activity feed metrics computed from log states.</p>
+              
+              <div class="telemetry-items">
+                <div class="telemetry-item">
+                  <span class="telemetry-label">Total Reports Generated</span>
+                  <span class="telemetry-value" id="telemetry-total-reports">0</span>
+                </div>
+                <div class="telemetry-item">
+                  <span class="telemetry-label">Last Audit Action</span>
+                  <span class="telemetry-value" id="telemetry-last-date">No audits run</span>
+                </div>
+                <div class="telemetry-item">
+                  <span class="telemetry-label">Mean Core Risk Score</span>
+                  <span class="telemetry-value" id="telemetry-avg-risk-score">0%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Analyses History Searchable Table -->
+          <section class="glass-card table-panel animate-fade-in" style="animation-delay: 200ms;">
+            <div class="table-panel-header">
+              <div>
+                <h3 class="panel-child-title">Historical Assessments Register</h3>
+                <p class="panel-child-desc">Browse, search, and sort past conceptual risk scans.</p>
+              </div>
+              
+              <div class="table-actions">
+                <div class="search-container">
+                  <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                  </svg>
+                  <input type="text" class="search-input" id="analytics-search-input" placeholder="Search project idea name...">
+                </div>
+                
+                <div class="sort-container">
+                  <span class="sort-label">Sort:</span>
+                  <select class="sort-select" id="analytics-sort-select">
+                    <option value="date-desc">Newest First</option>
+                    <option value="date-asc">Oldest First</option>
+                    <option value="score-desc">Score: High to Low</option>
+                    <option value="score-asc">Score: Low to High</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="table-responsive-container">
+              <table class="analytics-table">
+                <thead>
+                  <tr>
+                    <th>Project Concept Header</th>
+                    <th>Audit Date</th>
+                    <th>Feasibility Rating</th>
+                    <th>Risk Category</th>
+                    <th style="text-align: right;">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="analytics-table-body">
+                  <!-- Dynamic table rows -->
+                  <tr>
+                    <td colspan="5" style="text-align: center; color: var(--text-dim); padding: 3rem 0;">
+                      No records cataloged in workspace history.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+        </div>
+
+      </div>
+
+      <!-- General Footer -->
+      <footer class="console-footer">
+        <p>© 2026 De-Risk AI. All rights reserved. Professional-grade conceptual diagnostics console. Secure cloud environment.</p>
+      </footer>
+
+    </main>
+
+  </div>
+
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="dashboard.js"></script>
+</body>
+</html>
