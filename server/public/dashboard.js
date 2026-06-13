@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (!token || !userStr) {
     localStorage.clear();
-    window.location.href = "login.html";
+    window.location.href = "/login";
     return;
   }
 
@@ -548,7 +548,7 @@ document.addEventListener("DOMContentLoaded", () => {
       localStorage.removeItem("user");
       showToast("Signed out successfully.", "info");
       setTimeout(() => {
-        window.location.href = "login.html";
+        window.location.href = "/login";
       }, 500);
     });
   }
@@ -652,7 +652,7 @@ document.addEventListener("DOMContentLoaded", () => {
           localStorage.removeItem("user");
           showToast("Session expired. Please sign in again.", "error");
           setTimeout(() => {
-            window.location.href = "login.html";
+            window.location.href = "/login";
           }, 1500);
           return;
         }

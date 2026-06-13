@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // If already logged in, redirect to dashboard
   const token = localStorage.getItem("token");
   if (token) {
-    window.location.href = "dashboard.html";
+    window.location.href = "/dashboard";
     return;
   }
 
@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem("user", JSON.stringify(data.user));
 
         setTimeout(() => {
-          window.location.href = "dashboard.html";
+          window.location.href = "/dashboard";
         }, 1000);
       } catch (err) {
         showToast(err.message, "error");
@@ -124,7 +124,7 @@ document.addEventListener("DOMContentLoaded", () => {
         showToast("Account created successfully! Redirecting to login...", "success");
 
         setTimeout(() => {
-          window.location.href = "login.html";
+          window.location.href = "/login";
         }, 1500);
       } catch (err) {
         showToast(err.message, "error");

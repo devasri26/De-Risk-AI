@@ -12,7 +12,7 @@
       const token = localStorage.getItem("token");
       const user = localStorage.getItem("user");
       if (token && user) {
-        window.location.href = "dashboard.html";
+        window.location.href = "/dashboard";
       }
     })();
   </script>
@@ -67,7 +67,7 @@
       </form>
 
       <div class="auth-footer">
-        Don't have access? <a class="auth-link" href="signup.html">Create account</a>
+        Don't have access? <a class="auth-link" href="/signup">Create account</a>
       </div>
     </div>
   </div>

@@ -44,7 +44,7 @@
       </nav>
 
       <div class="landing-nav-actions">
-        <a href="login.html" class="btn-nav-secondary">Sign In</a>
+        <a href="/login" class="btn-nav-secondary">Sign In</a>
         <button class="btn-nav-primary btn-get-started-flow">Launch Console</button>
       </div>
     </div>
@@ -64,7 +64,7 @@
       
       <div class="hero-actions">
         <button class="btn-hero-primary btn-get-started-flow">Start Free Audit</button>
-        <a href="login.html" class="btn-hero-secondary">Sign In to Console</a>
+        <a href="/login" class="btn-hero-secondary">Sign In to Console</a>
       </div>
     </div>
 
@@ -267,7 +267,7 @@
       
       <div class="cta-actions">
         <button class="btn-primary btn-get-started-flow" style="padding: 0.95rem 2.25rem;">Start Free Audit</button>
-        <a href="signup.html" class="btn-secondary-glow">Create Account</a>
+        <a href="/signup" class="btn-secondary-glow">Create Account</a>
       </div>
     </div>
   </section>
@@ -296,9 +296,9 @@
 
       <div class="footer-links-col">
         <h4 class="footer-col-title">Workspace</h4>
-        <a href="login.html" class="footer-link">Console Login</a>
-        <a href="signup.html" class="footer-link">Signup Workspace</a>
-        <a href="dashboard.html" class="footer-link">Member Area</a>
+        <a href="/login" class="footer-link">Console Login</a>
+        <a href="/signup" class="footer-link">Signup Workspace</a>
+        <a href="/dashboard" class="footer-link">Member Area</a>
       </div>
 
     </div>
@@ -380,9 +380,9 @@
           const token = localStorage.getItem("token");
           const user = localStorage.getItem("user");
           if (token && user) {
-            window.location.href = "dashboard.html";
+            window.location.href = "/dashboard";
           } else {
-            window.location.href = "signup.html";
+            window.location.href = "/signup";
           }
         });
       });

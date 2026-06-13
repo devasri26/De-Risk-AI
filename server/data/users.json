@@ -40,5 +40,11 @@
     "email": "23cs089@drngpit.ac.in",
     "password": "$2a$10$vcn0SfmfipuBR3HovM4JYezNVWhF.R/ZauVQx1nKQVB5tNgUofJAa",
     "createdAt": "2026-06-12T17:28:25.439Z"
+  },
+  {
+    "id": "1781323436452bicuisd",
+    "email": "testuser_1781323436068@example.com",
+    "password": "$2a$10$IH3rP6AURNN.cecJAppRmOlzpOqiM8wVTUzKnXjSYw5zIO1C6jDae",
+    "createdAt": "2026-06-13T04:03:56.452Z"
   }
 ]
