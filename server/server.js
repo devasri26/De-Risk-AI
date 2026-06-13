@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
+import { exec } from "child_process";
 import projectRoutes from "./routes/projectRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 
@@ -47,5 +48,15 @@ app.use("/api/project", projectRoutes);
 const PORT = 5001;
 
 app.listen(PORT, () => {
-  console.log("Server running on port", PORT);
+  const url = `http://localhost:${PORT}`;
+  console.log("\n  🚀 AI Project Failure Predictor running!");
+  console.log(`  ➜  Local:   ${url}\n`);
+
+  // Auto-open browser on startup
+  const start = process.platform === "darwin" ? "open" : process.platform === "win32" ? "start" : "xdg-open";
+  exec(`${start} ${url}`, (err) => {
+    if (err) {
+      console.log("Could not auto-open browser. Please visit the URL manually.");
+    }
+  });
 });

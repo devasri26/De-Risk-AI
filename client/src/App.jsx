@@ -32,7 +32,7 @@ export default function App() {
 
   return (
     <div className="app-wrapper">
-      
+
       {/* Header component */}
       <header className="header-bar">
         <div className="logo-group">
@@ -49,7 +49,7 @@ export default function App() {
             <div className="logo-subtitle">Risk Diagnostic Console</div>
           </div>
         </div>
-        
+
         <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600 }}>
           STATUS: <span style={{ color: 'var(--emerald-color)' }}>● ONLINE</span>
         </div>
@@ -57,7 +57,7 @@ export default function App() {
 
       {/* Main Container */}
       <main style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-        
+
         {/* Error Alert panel */}
         {error && (
           <div className="error-box">

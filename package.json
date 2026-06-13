@@ -1,0 +1,14 @@
+{
+  "name": "ai-project-failure-predictor",
+  "version": "1.0.0",
+  "description": "Full-stack AI Project Failure Predictor SaaS platform",
+  "main": "server/server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "npm run dev --prefix server",
+    "start": "npm start --prefix server"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
