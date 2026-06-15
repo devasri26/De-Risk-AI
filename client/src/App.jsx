@@ -1,12 +1,21 @@
 import React, { useState } from 'react';
 import IdeaForm from './components/IdeaForm';
 import AnalysisResult from './components/AnalysisResult';
+import Auth from './components/Auth';
 import { analyzeProject } from './services/api';
 
 export default function App() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState(null);
   const [error, setError] = useState(null);
+  const [user, setUser] = useState(() => {
+    try {
+      const storedUser = localStorage.getItem('user');
+      return storedUser ? JSON.parse(storedUser) : null;
+    } catch {
+      return null;
+    }
+  });
 
   const handleAnalyzeIdea = async (ideaText) => {
     setIsAnalyzing(true);
@@ -26,6 +35,14 @@ export default function App() {
   };
 
   const handleReset = () => {
+    setAnalysisResult(null);
+    setError(null);
+  };
+
+  const handleSignOut = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    setUser(null);
     setAnalysisResult(null);
     setError(null);
   };
@@ -50,45 +67,74 @@ export default function App() {
           </div>
         </div>
 
-        <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600 }}>
-          STATUS: <span style={{ color: 'var(--emerald-color)' }}>● ONLINE</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600 }}>
+          {user && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <span style={{ color: '#e5e7eb' }}>{user.email}</span>
+              <button 
+                onClick={handleSignOut} 
+                style={{ 
+                  background: 'rgba(239, 68, 68, 0.1)', 
+                  border: '1px solid rgba(239, 68, 68, 0.2)', 
+                  color: '#ef4444', 
+                  padding: '0.25rem 0.75rem', 
+                  borderRadius: '4px', 
+                  cursor: 'pointer',
+                  fontSize: '0.75rem',
+                  fontWeight: 700,
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                Sign Out
+              </button>
+            </div>
+          )}
+          <div>
+            STATUS: <span style={{ color: 'var(--emerald-color)' }}>● ONLINE</span>
+          </div>
         </div>
       </header>
 
       {/* Main Container */}
       <main style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
 
-        {/* Error Alert panel */}
-        {error && (
-          <div className="error-box">
-            <div className="error-message">
-              <strong>Audit Error:</strong> {error}
-            </div>
-            <button className="btn-dismiss" onClick={() => setError(null)}>
-              Dismiss
-            </button>
-          </div>
-        )}
+        {!user ? (
+          <Auth onAuthSuccess={(userData) => setUser(userData)} />
+        ) : (
+          <>
+            {/* Error Alert panel */}
+            {error && (
+              <div className="error-box">
+                <div className="error-message">
+                  <strong>Audit Error:</strong> {error}
+                </div>
+                <button className="btn-dismiss" onClick={() => setError(null)}>
+                  Dismiss
+                </button>
+              </div>
+            )}
 
-        {/* Loading Spinner Panel */}
-        {isAnalyzing && (
-          <div className="glass-card loader-wrapper">
-            <div className="spinner-ring" />
-            <h3 className="loader-text">Analyzing Concept</h3>
-            <p className="loader-sub">
-              Connecting with Google Gemini nodes to identify failure triggers, data bottlenecks, and compute limitations...
-            </p>
-          </div>
-        )}
+            {/* Loading Spinner Panel */}
+            {isAnalyzing && (
+              <div className="glass-card loader-wrapper">
+                <div className="spinner-ring" />
+                <h3 className="loader-text">Analyzing Concept</h3>
+                <p className="loader-sub">
+                  Connecting with Google Gemini nodes to identify failure triggers, data bottlenecks, and compute limitations...
+                </p>
+              </div>
+            )}
 
-        {/* Input Form Section */}
-        {!analysisResult && !isAnalyzing && (
-          <IdeaForm onSubmit={handleAnalyzeIdea} isAnalyzing={isAnalyzing} />
-        )}
+            {/* Input Form Section */}
+            {!analysisResult && !isAnalyzing && (
+              <IdeaForm onSubmit={handleAnalyzeIdea} isAnalyzing={isAnalyzing} />
+            )}
 
-        {/* Report Output Section */}
-        {analysisResult && !isAnalyzing && (
-          <AnalysisResult result={analysisResult} onReset={handleReset} />
+            {/* Report Output Section */}
+            {analysisResult && !isAnalyzing && (
+              <AnalysisResult result={analysisResult} onReset={handleReset} />
+            )}
+          </>
         )}
 
       </main>
@@ -101,3 +147,4 @@ export default function App() {
     </div>
   );
 }
+

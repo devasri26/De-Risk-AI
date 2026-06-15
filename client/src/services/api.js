@@ -9,6 +9,20 @@ const apiClient = axios.create({
   }
 });
 
+// Automatically inject JWT token into requests if available in localStorage
+apiClient.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
 /**
  * Trigger Gemini AI failure analysis for a project idea
  * @param {string} idea - The user-provided project concept description
@@ -20,8 +34,6 @@ export const analyzeProject = async (idea) => {
     return response.data;
   } catch (error) {
     console.error('Axios service request failed:', error);
-    
-    // Extract server message or default to standard offline error
     const message = error.response?.data?.error || 
                     error.response?.data?.message || 
                     error.message || 
@@ -30,6 +42,43 @@ export const analyzeProject = async (idea) => {
   }
 };
 
-export default {
-  analyzeProject
+/**
+ * Log in a user
+ * @param {string} email
+ * @param {string} password
+ * @returns {Promise<Object>} Login response with token and user details
+ */
+export const loginUser = async (email, password) => {
+  try {
+    const response = await apiClient.post('/api/auth/login', { email, password });
+    return response.data;
+  } catch (error) {
+    console.error('Login request failed:', error);
+    const message = error.response?.data?.error || 'Invalid credentials or login failed.';
+    throw new Error(message);
+  }
 };
+
+/**
+ * Sign up a new user
+ * @param {string} email
+ * @param {string} password
+ * @returns {Promise<Object>} Signup response
+ */
+export const signupUser = async (email, password) => {
+  try {
+    const response = await apiClient.post('/api/auth/signup', { email, password });
+    return response.data;
+  } catch (error) {
+    console.error('Signup request failed:', error);
+    const message = error.response?.data?.error || 'Failed to create account.';
+    throw new Error(message);
+  }
+};
+
+export default {
+  analyzeProject,
+  loginUser,
+  signupUser
+};
+
