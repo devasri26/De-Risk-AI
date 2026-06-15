@@ -1,101 +1,55 @@
-# De-Risk AI — AI-Powered Project Failure Predictor
+# 🛡️ De-Risk AI
 
-De-Risk AI is a premium, full-stack conceptual diagnostics console designed to evaluate software architecture proposals, database designs, and project concepts before coding begins. By leveraging the **Google Gemini API**, it runs deep heuristics to identify failure triggers, estimate a feasibility score, outline mitigation matrices, and generate presentation-ready PDF reports.
+An AI-powered conceptual diagnostics console that identifies software failure triggers before production.
 
----
-
-## 🚀 Key Features
-
-* **AI-Driven Diagnostics**: Connects with Gemini nodes to run structural risk analysis on tech stacks, database choices, third-party APIs, and scalability boundaries.
-* **Confidence Heuristics**: Computes feasibility ratings mapped to standard startup survival and engineering health benchmarks.
-* **JWT User Authentication**: Secure user registration, sign-in, and session management on the Express server.
-* **Interactive Dashboard**: Track scan history, review metrics, and view real-time statistics counters.
-* **PDF Audit Generation**: Export beautifully formatted, executive-ready PDF failure reports to share with tech leads, investors, and stakeholders.
-* **Premium SaaS UI**: Features dark mode styling, ambient glowing background animations, responsive grids, and glassmorphic UI elements.
+<p align="center">
+  <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
+  <img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite" />
+  <img src="https://img.shields.io/badge/Node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white" alt="Node.js" />
+  <img src="https://img.shields.io/badge/Express-404D59?style=for-the-badge&logo=express&logoColor=white" alt="Express" />
+  <img src="https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=JSON%20web%20tokens&logoColor=white" alt="JWT" />
+  <img src="https://img.shields.io/badge/Google%20Gemini-8E75C2?style=for-the-badge&logo=googlegemini&logoColor=white" alt="Gemini" />
+</p>
 
 ---
 
-## 🛠️ Tech Stack & Architecture
+## ⚡ Key Modules
 
-### Frontend (Client Console)
-* **Framework**: React 19 + Vite 8
-* **Styling**: Vanilla CSS with custom CSS variables, custom components, responsive layout systems
-* **State & Networking**: Axios API client
-
-### Backend (Diagnostics Engine)
-* **Runtime**: Node.js (ES Modules)
-* **Web Server**: Express
-* **Database**: Local JSON storage (mock database for authentication and report history)
-* **Authentication**: JSON Web Tokens (JWT) + bcryptjs password hashing
-* **AI Integration**: `@google/generative-ai` (Gemini model API)
+* **AI Diagnostics**: Real-time architectural and database audit via Gemini AI nodes.
+* **Feasibility Rating**: Quantified project viability scores based on startup health metrics.
+* **JWT Auth**: Secured user registrations and logins.
+* **Diagnostic History**: Saved audits for easy retrieval.
+* **PDF Export**: Presentation-ready audit summaries for stakeholders.
 
 ---
 
-## 📁 Repository Structure
+## ⚙️ Quick Start
 
-```text
-├── client/                 # React frontend application
-│   ├── src/                # React components, styles, services
-│   ├── index.html          # Frontend main entry
-│   └── vite.config.js      # Vite configuration & server options
-├── server/                 # Express backend server
-│   ├── controllers/        # Route controllers for authentication & analysis
-│   ├── routes/             # Express API endpoints
-│   ├── public/             # Serves static web console pages
-│   ├── server.js           # Express main server entry
-│   └── data/               # Local JSON database stores
-├── package.json            # Root configuration for dev scripts
-└── README.md               # Main documentation
-```
-
----
-
-## ⚙️ Setup & Installation
-
-### 1. Clone & Install Dependencies
-
-Clone this repository and install the npm dependencies at the root, client, and server folders:
-
+### 1. Installation
 ```bash
 # Clone the repository
 git clone https://github.com/devasri26/De-Risk-AI.git
 cd De-Risk-AI
 
-# Install root dependencies
+# Install all dependencies
 npm install
-
-# Install server dependencies
-cd server
-npm install
-
-# Install client dependencies
-cd ../client
-npm install
+npm install --prefix client
+npm install --prefix server
 ```
 
-### 2. Configure Environment Variables
-
-Create a `.env` file in the `server` directory and add your Google Gemini API key:
-
+### 2. Environment Setup
+Create a `.env` file in the `server/` directory:
 ```env
 PORT=5001
 GEMINI_API_KEY=your_gemini_api_key_here
 JWT_SECRET=your_jwt_secret_here
 ```
 
-### 3. Run the Development Servers
-
-You can start the backend and frontend dev environments concurrently from the root directory:
-
+### 3. Execution
 ```bash
-# Start backend server (Port 5001) & Vite frontend server (Port 5173/5174)
+# Run backend and frontend concurrently
 npm run dev
 ```
 
-* Backend server runs at: `http://localhost:5001`
-* Client application runs at: `http://localhost:5174/` (or port auto-assigned by Vite)
-
----
-
-## 📄 License
-This project is licensed under the ISC License.
+* **Backend & Static Web Console**: [http://localhost:5001](http://localhost:5001)
+* **Vite React UI**: [http://localhost:5174/](http://localhost:5174/)
