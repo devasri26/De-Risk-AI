@@ -23,6 +23,19 @@ An AI-powered conceptual diagnostics console that identifies software failure tr
 
 ---
 
+## 🛠️ Tech Stack
+
+| Component | Technology | Description |
+| :--- | :--- | :--- |
+| **Frontend** | React 19, Vite 8, Tailwind CSS, Axios, Lucide React | Modern SPA with custom layout and styles. |
+| **Backend** | Node.js, Express, CORS | API framework with custom routing. |
+| **AI Node** | Google Gemini API (`@google/generative-ai`) | Real-time project concept feasibility diagnostics. |
+| **Security** | JSON Web Tokens (JWT), bcryptjs | Secure routes, session handling, and hashed passwords. |
+| **Database** | File-based local JSON store | Persistent client and report history storage. |
+
+---
+
+
 ## ⚙️ Quick Start
 
 ### 1. Installation
