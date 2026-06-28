@@ -85,6 +85,36 @@ document.addEventListener("DOMContentLoaded", () => {
   const scoreBadge = document.getElementById("score-badge");
   const progressBarFill = document.getElementById("progress-bar-fill");
 
+  // Investor Readiness Displays
+  const investorVerdictTitle = document.getElementById("investor-verdict-title");
+  const investorScoreValue = document.getElementById("investor-score-value");
+  const investorVerdictBadge = document.getElementById("investor-verdict-badge");
+  const investorMetricsGrid = document.getElementById("investor-metrics-grid");
+
+  // Project Risk Heatmap Displays
+  const heatmapListContainer = document.getElementById("heatmap-list-container");
+  let riskRadarChartInstance = null;
+
+  // AI Roadmap Timeline Displays
+  const roadmapTimelineContainer = document.getElementById("roadmap-timeline-container");
+
+  // What-If Simulator Displays
+  const simulatorControlsGrid = document.getElementById("simulator-controls-grid");
+  const simulatorComparisonList = document.getElementById("simulator-comparison-list");
+  let simulatorChartInstance = null;
+  let activeSimulation = {
+    budget: false,
+    team: false,
+    timeline: false,
+    marketing: false,
+    infra: false
+  };
+  let currentBaseMetrics = {
+    success: 50,
+    investor: 50,
+    risk: 50
+  };
+
   // Output Containers
   const reasonsList = document.getElementById("reasons-list");
   const risksGrid = document.getElementById("risks-grid");
@@ -359,7 +389,18 @@ document.addEventListener("DOMContentLoaded", () => {
     historySidebarList.innerHTML = "";
 
     if (history.length === 0) {
-      historySidebarList.innerHTML = `<div class="history-empty-text">No reports logged.</div>`;
+      historySidebarList.innerHTML = `
+        <div class="empty-state-container" style="padding: 2rem 1rem;">
+          <div class="empty-state-icon" style="width: 40px; height: 40px; margin-bottom: 0.75rem; box-shadow: none; background: rgba(255, 255, 255, 0.02); border-color: rgba(255, 255, 255, 0.05); color: var(--text-dim);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+          </div>
+          <h5 class="empty-state-title" style="font-size: 0.85rem; margin-bottom: 0.25rem;">No assessments logged</h5>
+          <p class="empty-state-desc" style="font-size: 0.75rem; max-width: 200px;">Your local database workspace is empty.</p>
+        </div>
+      `;
       return;
     }
 
@@ -441,6 +482,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (projectIdeaInput) {
       projectIdeaInput.value = "";
       projectIdeaInput.dispatchEvent(new Event("input"));
+    }
+    // Hide download PDF button
+    if (actionPdfDownloadBtn) {
+      actionPdfDownloadBtn.style.display = "none";
     }
   }
 
@@ -714,8 +759,487 @@ document.addEventListener("DOMContentLoaded", () => {
   // Render report details
   // ----------------------------------------------------
   function renderDashboard(data) {
+    // Show download PDF button
+    if (actionPdfDownloadBtn) {
+      actionPdfDownloadBtn.style.display = "flex";
+    }
+
     const { risks, failureReasons, solutions } = data;
     const confidenceScore = typeof data.confidenceScore === "number" ? data.confidenceScore : 50;
+
+    // Investor Readiness Score rendering
+    const investorReadinessScore = typeof data.investorReadinessScore === "number" ? data.investorReadinessScore : 50;
+    const marketPotentialScore = typeof data.marketPotentialScore === "number" ? data.marketPotentialScore : 50;
+    const scalabilityScore = typeof data.scalabilityScore === "number" ? data.scalabilityScore : 50;
+    const revenueModelScore = typeof data.revenueModelScore === "number" ? data.revenueModelScore : 50;
+    const executionFeasibilityScore = typeof data.executionFeasibilityScore === "number" ? data.executionFeasibilityScore : 50;
+
+    if (investorScoreValue) {
+      investorScoreValue.innerText = `${investorReadinessScore}/100`;
+      investorScoreValue.className = investorReadinessScore >= 80 ? "text-emerald" : (investorReadinessScore >= 60 ? "text-amber" : "text-rose");
+    }
+
+    if (investorVerdictBadge) {
+      investorVerdictBadge.className = "badge-pill";
+      if (investorReadinessScore >= 80) {
+        investorVerdictBadge.classList.add("badge-emerald");
+        investorVerdictBadge.innerText = "Investor Ready";
+      } else if (investorReadinessScore >= 60) {
+        investorVerdictBadge.classList.add("badge-amber");
+        investorVerdictBadge.innerText = "Needs Improvement";
+      } else {
+        investorVerdictBadge.classList.add("badge-rose");
+        investorVerdictBadge.innerText = "High Risk Investment";
+      }
+    }
+
+    if (investorVerdictTitle) {
+      if (investorReadinessScore >= 80) {
+        investorVerdictTitle.innerText = "Investor Ready";
+      } else if (investorReadinessScore >= 60) {
+        investorVerdictTitle.innerText = "Needs Improvement";
+      } else {
+        investorVerdictTitle.innerText = "High Risk Investment";
+      }
+    }
+
+    if (investorMetricsGrid) {
+      investorMetricsGrid.innerHTML = "";
+      const metrics = [
+        { label: "Market Potential", score: marketPotentialScore },
+        { label: "Scalability", score: scalabilityScore },
+        { label: "Revenue Model", score: revenueModelScore },
+        { label: "Execution Feasibility", score: executionFeasibilityScore }
+      ];
+
+      metrics.forEach((item) => {
+        let colorClass = "text-rose";
+        let barColor = "var(--rose-color)";
+        if (item.score >= 80) {
+          colorClass = "text-emerald";
+          barColor = "var(--emerald-color)";
+        } else if (item.score >= 60) {
+          colorClass = "text-amber";
+          barColor = "var(--amber-color)";
+        }
+
+        const card = document.createElement("div");
+        card.className = "glass-card animate-fade-in";
+        card.style.padding = "1.25rem";
+        card.style.display = "flex";
+        card.style.flexDirection = "column";
+        card.style.gap = "0.75rem";
+        card.style.background = "rgba(255, 255, 255, 0.02)";
+        card.style.margin = "0";
+
+        card.innerHTML = `
+          <span style="font-size: 0.82rem; color: var(--text-muted); font-weight: 600;">${item.label}</span>
+          <div style="display: flex; justify-content: space-between; align-items: baseline;">
+            <span style="font-size: 1.6rem; font-weight: 800;" class="${colorClass}">${item.score}%</span>
+          </div>
+          <div style="height: 6px; background: rgba(255, 255, 255, 0.05); border-radius: 3px; overflow: hidden;">
+            <div style="width: ${item.score}%; height: 100%; background: ${barColor}; border-radius: 3px; transition: width 1s ease;"></div>
+          </div>
+        `;
+        investorMetricsGrid.appendChild(card);
+      });
+    }
+
+    // Project Risk Heatmap rendering
+    const technicalRisk = typeof data.technicalRisk === "number" ? data.technicalRisk : 50;
+    const budgetRisk = typeof data.budgetRisk === "number" ? data.budgetRisk : 50;
+    const marketRisk = typeof data.marketRisk === "number" ? data.marketRisk : 50;
+    const scalabilityRisk = typeof data.scalabilityRisk === "number" ? data.scalabilityRisk : 50;
+    const operationalRisk = typeof data.operationalRisk === "number" ? data.operationalRisk : 50;
+
+    if (heatmapListContainer) {
+      heatmapListContainer.innerHTML = "";
+      const riskVectors = [
+        { name: "Technical Risk", score: technicalRisk },
+        { name: "Budget Risk", score: budgetRisk },
+        { name: "Market Risk", score: marketRisk },
+        { name: "Scalability Risk", score: scalabilityRisk },
+        { name: "Operational Risk", score: operationalRisk }
+      ];
+
+      riskVectors.forEach((item) => {
+        let level = "Low";
+        let bg = "rgba(16, 185, 129, 0.05)";
+        let border = "rgba(16, 185, 129, 0.2)";
+        let textClass = "text-emerald";
+        let barColor = "var(--emerald-color)";
+        
+        if (item.score >= 70) {
+          level = "High";
+          bg = "rgba(244, 63, 94, 0.07)";
+          border = "rgba(244, 63, 94, 0.25)";
+          textClass = "text-rose";
+          barColor = "var(--rose-color)";
+        } else if (item.score >= 40) {
+          level = "Medium";
+          bg = "rgba(217, 119, 6, 0.07)";
+          border = "rgba(217, 119, 6, 0.25)";
+          textClass = "text-amber";
+          barColor = "var(--amber-color)";
+        }
+
+        const card = document.createElement("div");
+        card.className = "glass-card animate-fade-in";
+        card.style.background = bg;
+        card.style.borderColor = border;
+        card.style.padding = "0.75rem 1.25rem";
+        card.style.margin = "0";
+        card.style.display = "flex";
+        card.style.flexDirection = "column";
+        card.style.gap = "0.5rem";
+        card.style.boxShadow = "inset 0 1px 1px rgba(255, 255, 255, 0.01)";
+
+        card.innerHTML = `
+          <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+            <span style="font-weight: 700; font-size: 0.88rem; color: var(--text-bright);">${item.name}</span>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <span class="badge-pill ${level === 'High' ? 'badge-rose' : (level === 'Medium' ? 'badge-amber' : 'badge-emerald')}" style="padding: 2px 8px; font-size: 0.65rem; border-radius: 4px;">${level}</span>
+              <span class="${textClass}" style="font-weight: 800; font-size: 0.95rem;">${item.score}%</span>
+            </div>
+          </div>
+          <div style="height: 5px; background: rgba(255, 255, 255, 0.04); border-radius: 3px; overflow: hidden; width: 100%;">
+            <div style="width: ${item.score}%; height: 100%; background: ${barColor}; border-radius: 3px; transition: width 1.2s ease;"></div>
+          </div>
+        `;
+        heatmapListContainer.appendChild(card);
+      });
+    }
+
+    const radarCtx = document.getElementById("riskRadarChart");
+    if (radarCtx) {
+      if (riskRadarChartInstance) {
+        riskRadarChartInstance.destroy();
+        riskRadarChartInstance = null;
+      }
+      
+      riskRadarChartInstance = new Chart(radarCtx, {
+        type: 'radar',
+        data: {
+          labels: ['Technical', 'Budget', 'Market', 'Scalability', 'Operational'],
+          datasets: [{
+            label: 'Risk Level %',
+            data: [technicalRisk, budgetRisk, marketRisk, scalabilityRisk, operationalRisk],
+            backgroundColor: 'rgba(244, 63, 94, 0.2)',
+            borderColor: 'hsl(346, 87%, 57%)',
+            pointBackgroundColor: 'hsl(346, 87%, 57%)',
+            pointBorderColor: '#ffffff',
+            pointHoverBackgroundColor: '#ffffff',
+            pointHoverBorderColor: 'hsl(346, 87%, 57%)',
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            }
+          },
+          scales: {
+            r: {
+              angleLines: {
+                color: 'rgba(255, 255, 255, 0.08)'
+              },
+              grid: {
+                color: 'rgba(255, 255, 255, 0.08)'
+              },
+              pointLabels: {
+                color: 'var(--text-muted)',
+                font: {
+                  family: "'Outfit', sans-serif",
+                  size: 10,
+                  weight: '600'
+                }
+              },
+              ticks: {
+                backdropColor: 'transparent',
+                color: 'rgba(255, 255, 255, 0.3)',
+                showLabelBackdrop: false,
+                font: {
+                  size: 8
+                },
+                stepSize: 20
+              },
+              min: 0,
+              max: 100
+            }
+          }
+        }
+      });
+    }
+
+    // Render AI Implementation Roadmap
+    if (roadmapTimelineContainer) {
+      roadmapTimelineContainer.innerHTML = "";
+      const roadmap = Array.isArray(data.roadmap) ? data.roadmap : [];
+      
+      if (roadmap.length === 0) {
+        roadmapTimelineContainer.innerHTML = `<p class="card-text">No implementation roadmap generated for this concept.</p>`;
+      } else {
+        roadmap.forEach((phaseData, index) => {
+          const stepIndex = index + 1;
+          const stepEl = document.createElement("div");
+          stepEl.className = "timeline-item animate-fade-in";
+          stepEl.style.position = "relative";
+          stepEl.style.animationDelay = `${index * 150}ms`;
+
+          const nodeColor = `hsl(${(index * 55) % 360}, 75%, 55%)`;
+          const nodeGlow = `hsla(${(index * 55) % 360}, 75%, 55%, 0.15)`;
+
+          let taskHtml = "";
+          if (Array.isArray(phaseData.tasks)) {
+            phaseData.tasks.forEach(task => {
+              taskHtml += `
+                <li style="display: flex; gap: 0.75rem; align-items: flex-start; color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; margin-bottom: 0.5rem;">
+                  <span style="color: ${nodeColor}; font-weight: bold; font-size: 1.1rem; line-height: 1;">•</span>
+                  <span>${escapeHtml(task)}</span>
+                </li>
+              `;
+            });
+          }
+
+          stepEl.innerHTML = `
+            <div style="position: absolute; left: -3.05rem; top: 0; width: 1.6rem; height: 1.6rem; background: #0f172a; border: 2.5px solid ${nodeColor}; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 800; color: #ffffff; box-shadow: 0 0 10px ${nodeGlow}; z-index: 2;">
+              ${stepIndex}
+            </div>
+            <div class="glass-card" style="padding: 1.25rem; margin: 0; display: flex; flex-direction: column; gap: 0.75rem; background: rgba(255, 255, 255, 0.01);">
+              <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; width: 100%;">
+                <h5 style="margin: 0; font-size: 1rem; font-weight: 800; color: var(--text-bright);">${escapeHtml(phaseData.phase)}</h5>
+                <span class="badge-pill" style="background: rgba(255, 255, 255, 0.03); border-color: rgba(255, 255, 255, 0.08); color: var(--text-muted); padding: 2px 10px; font-size: 0.7rem; border-radius: 4px;">Duration: ${escapeHtml(phaseData.duration)}</span>
+              </div>
+              <ul style="list-style: none; padding: 0; margin: 0;">
+                ${taskHtml}
+              </ul>
+            </div>
+          `;
+          roadmapTimelineContainer.appendChild(stepEl);
+        });
+      }
+    }
+
+    // Setup and Update What-If Simulator
+    currentBaseMetrics = {
+      success: confidenceScore,
+      investor: investorReadinessScore,
+      risk: 100 - confidenceScore
+    };
+
+    // Reset active simulation toggles for new diagnostic reports
+    activeSimulation = {
+      budget: false,
+      team: false,
+      timeline: false,
+      marketing: false,
+      infra: false
+    };
+
+    function updateSimulation() {
+      let successSim = currentBaseMetrics.success;
+      let investorSim = currentBaseMetrics.investor;
+      let riskSim = currentBaseMetrics.risk;
+
+      if (activeSimulation.budget) { successSim += 6; investorSim += 5; riskSim -= 6; }
+      if (activeSimulation.team) { successSim += 4; investorSim += 3; riskSim -= 4; }
+      if (activeSimulation.timeline) { successSim -= 8; investorSim -= 5; riskSim += 8; }
+      if (activeSimulation.marketing) { successSim += 2; investorSim += 8; riskSim -= 2; }
+      if (activeSimulation.infra) { successSim += 8; investorSim += 4; riskSim -= 8; }
+
+      successSim = Math.min(100, Math.max(0, successSim));
+      investorSim = Math.min(100, Math.max(0, investorSim));
+      riskSim = Math.min(100, Math.max(0, riskSim));
+
+      const getRiskLevelName = (score) => {
+        if (score >= 50) return "High";
+        if (score >= 25) return "Medium";
+        return "Low";
+      };
+
+      const getInvestorVerdictName = (score) => {
+        if (score >= 80) return "Investor Ready";
+        if (score >= 60) return "Needs Improvement";
+        return "High Risk Investment";
+      };
+
+      const baseRiskLevel = getRiskLevelName(currentBaseMetrics.risk);
+      const simRiskLevel = getRiskLevelName(riskSim);
+
+      const baseInvVerdict = getInvestorVerdictName(currentBaseMetrics.investor);
+      const simInvVerdict = getInvestorVerdictName(investorSim);
+
+      if (simulatorComparisonList) {
+        simulatorComparisonList.innerHTML = `
+          <!-- Success Probability -->
+          <div style="display: flex; flex-direction: column; gap: 0.25rem;">
+            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">
+              <span>Success Probability</span>
+              <span style="color: ${successSim >= currentBaseMetrics.success ? 'var(--emerald-color)' : 'var(--rose-color)'}; font-weight: bold;">
+                ${successSim >= currentBaseMetrics.success ? '+' : ''}${successSim - currentBaseMetrics.success}%
+              </span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-top: 0.25rem;">
+              <span style="font-size: 1.2rem; font-weight: 800; color: var(--text-muted);">${currentBaseMetrics.success}%</span>
+              <span style="color: var(--text-muted); font-weight: bold;">→</span>
+              <span style="font-size: 1.5rem; font-weight: 800; color: ${successSim >= 75 ? 'var(--emerald-color)' : (successSim >= 50 ? 'var(--amber-color)' : 'var(--rose-color)')};">${successSim}%</span>
+            </div>
+          </div>
+
+          <!-- Risk Score & Level -->
+          <div style="display: flex; flex-direction: column; gap: 0.25rem; border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 0.75rem;">
+            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">
+              <span>Risk Score & Level</span>
+              <span style="color: ${riskSim <= currentBaseMetrics.risk ? 'var(--emerald-color)' : 'var(--rose-color)'}; font-weight: bold;">
+                ${riskSim >= currentBaseMetrics.risk ? '+' : ''}${riskSim - currentBaseMetrics.risk}%
+              </span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-top: 0.25rem;">
+              <span style="font-size: 1.2rem; font-weight: 800; color: var(--text-muted);">${currentBaseMetrics.risk}% (${baseRiskLevel})</span>
+              <span style="color: var(--text-muted); font-weight: bold;">→</span>
+              <span style="font-size: 1.5rem; font-weight: 800; color: ${riskSim >= 50 ? 'var(--rose-color)' : (riskSim >= 25 ? 'var(--amber-color)' : 'var(--emerald-color)')};">${riskSim}% (${simRiskLevel})</span>
+            </div>
+          </div>
+
+          <!-- Investor Readiness Score -->
+          <div style="display: flex; flex-direction: column; gap: 0.25rem; border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 0.75rem;">
+            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">
+              <span>Investor Readiness</span>
+              <span style="color: ${investorSim >= currentBaseMetrics.investor ? 'var(--emerald-color)' : 'var(--rose-color)'}; font-weight: bold;">
+                ${investorSim >= currentBaseMetrics.investor ? '+' : ''}${investorSim - currentBaseMetrics.investor}%
+              </span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-top: 0.25rem;">
+              <span style="font-size: 1.2rem; font-weight: 800; color: var(--text-muted);">${currentBaseMetrics.investor}/100 (${baseInvVerdict})</span>
+              <span style="color: var(--text-muted); font-weight: bold;">→</span>
+              <span style="font-size: 1.5rem; font-weight: 800; color: ${investorSim >= 80 ? 'var(--emerald-color)' : (investorSim >= 60 ? 'var(--amber-color)' : 'var(--rose-color)')};">${investorSim}/100 (${simInvVerdict})</span>
+            </div>
+          </div>
+        `;
+      }
+
+      const canvasCtx = document.getElementById("simulatorChart");
+      if (canvasCtx) {
+        if (simulatorChartInstance) {
+          simulatorChartInstance.destroy();
+          simulatorChartInstance = null;
+        }
+
+        simulatorChartInstance = new Chart(canvasCtx, {
+          type: 'bar',
+          data: {
+            labels: ['Success Prob.', 'Risk Score', 'Investor Ready'],
+            datasets: [
+              {
+                label: 'Before',
+                data: [currentBaseMetrics.success, currentBaseMetrics.risk, currentBaseMetrics.investor],
+                backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                borderColor: 'rgba(255, 255, 255, 0.2)',
+                borderWidth: 1
+              },
+              {
+                label: 'After',
+                data: [successSim, riskSim, investorSim],
+                backgroundColor: 'rgba(99, 102, 241, 0.65)',
+                borderColor: 'hsl(250, 84%, 63%)',
+                borderWidth: 1
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            indexAxis: 'y',
+            plugins: {
+              legend: {
+                labels: {
+                  color: 'var(--text-muted)',
+                  font: {
+                    family: "'Outfit', sans-serif"
+                  }
+                }
+              }
+            },
+            scales: {
+              x: {
+                grid: {
+                  color: 'rgba(255, 255, 255, 0.05)'
+                },
+                ticks: {
+                  color: 'rgba(255, 255, 255, 0.4)',
+                  font: {
+                    size: 10
+                  }
+                },
+                min: 0,
+                max: 100
+              },
+              y: {
+                grid: {
+                  display: false
+                },
+                ticks: {
+                  color: 'var(--text-muted)',
+                  font: {
+                    family: "'Outfit', sans-serif",
+                    size: 10,
+                    weight: '600'
+                  }
+                }
+              }
+            }
+          }
+        });
+      }
+    }
+
+    if (simulatorControlsGrid) {
+      simulatorControlsGrid.innerHTML = "";
+      const controls = [
+        { key: "budget", label: "Increase Budget by 20%", icon: "💰" },
+        { key: "team", label: "Increase Team Size", icon: "👥" },
+        { key: "timeline", label: "Reduce Timeline", icon: "⏱️" },
+        { key: "marketing", label: "Increase Marketing", icon: "📈" },
+        { key: "infra", label: "Improve Infrastructure", icon: "☁️" }
+      ];
+
+      controls.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "glass-card";
+        card.style.padding = "1rem";
+        card.style.margin = "0";
+        card.style.display = "flex";
+        card.style.flexDirection = "column";
+        card.style.alignItems = "center";
+        card.style.justifyContent = "center";
+        card.style.gap = "0.5rem";
+        card.style.cursor = "pointer";
+        card.style.textAlign = "center";
+        card.style.transition = "all 0.25s ease";
+        card.style.background = "rgba(255, 255, 255, 0.01)";
+        card.style.borderColor = "var(--border-dim)";
+
+        card.innerHTML = `
+          <span style="font-size: 1.5rem;">${item.icon}</span>
+          <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-bright);">${item.label}</span>
+        `;
+
+        card.addEventListener("click", () => {
+          activeSimulation[item.key] = !activeSimulation[item.key];
+          card.style.background = activeSimulation[item.key] ? "rgba(99, 102, 241, 0.1)" : "rgba(255, 255, 255, 0.01)";
+          card.style.borderColor = activeSimulation[item.key] ? "var(--primary-color)" : "var(--border-dim)";
+          updateSimulation();
+        });
+
+        simulatorControlsGrid.appendChild(card);
+      });
+    }
+
+    // Call update simulation once to draw the base graphs
+    updateSimulation();
 
     const radius = 50;
     const circumference = 2 * Math.PI * radius;
@@ -838,6 +1362,132 @@ document.addEventListener("DOMContentLoaded", () => {
       solutionsList.innerHTML = `<p class="card-text">No actionable mitigation matrices found.</p>`;
     }
 
+    // Render SWOT Analysis
+    const swotGrid = document.getElementById("swot-grid");
+    if (swotGrid) {
+      swotGrid.innerHTML = "";
+      const swot = data.swot || { strengths: [], weaknesses: [], opportunities: [], threats: [] };
+      
+      const categories = [
+        {
+          key: "strengths",
+          label: "Strengths",
+          icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`,
+          class: "swot-strengths"
+        },
+        {
+          key: "weaknesses",
+          label: "Weaknesses",
+          icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>`,
+          class: "swot-weaknesses"
+        },
+        {
+          key: "opportunities",
+          label: "Opportunities",
+          icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A5 5 0 0 0 8 8c0 1 .3 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"></path><line x1="9" y1="18" x2="15" y2="18"></line><line x1="10" y1="22" x2="14" y2="22"></line></svg>`,
+          class: "swot-opportunities"
+        },
+        {
+          key: "threats",
+          label: "Threats",
+          icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>`,
+          class: "swot-threats"
+        }
+      ];
+
+      categories.forEach((cat, index) => {
+        const card = document.createElement("div");
+        card.className = `swot-card ${cat.class} animate-fade-in`;
+        card.style.animationDelay = `${index * 150}ms`;
+        
+        let listHtml = "";
+        const items = Array.isArray(swot[cat.key]) ? swot[cat.key] : [];
+        if (items.length > 0) {
+          items.forEach(item => {
+            listHtml += `
+              <li class="swot-item">
+                <span class="swot-bullet">•</span>
+                <span>${escapeHtml(item)}</span>
+              </li>
+            `;
+          });
+        } else {
+          listHtml += `<li class="swot-item" style="color: var(--text-dim);">No strategic insights generated.</li>`;
+        }
+
+        card.innerHTML = `
+          <div class="swot-card-header">
+            <div class="swot-icon-wrapper">
+              ${cat.icon}
+            </div>
+            <h4 class="swot-card-title">${cat.label}</h4>
+          </div>
+          <ul class="swot-list">
+            ${listHtml}
+          </ul>
+        `;
+        swotGrid.appendChild(card);
+      });
+    }
+
+    // Render AI Budget & Timeline Estimator
+    const estimatesGrid = document.getElementById("estimates-grid");
+    if (estimatesGrid) {
+      estimatesGrid.innerHTML = "";
+      const estObj = data.estimates || {
+        estimatedBudget: "₹4–6 Lakhs",
+        estimatedDuration: "4–6 Months",
+        recommendedTeamSize: "5 Developers",
+        complexityLevel: "Medium",
+        estimatedMaintenanceCost: "₹40K / Month"
+      };
+
+      const estimationCards = [
+        {
+          label: "Estimated Budget",
+          value: estObj.estimatedBudget,
+          icon: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>`
+        },
+        {
+          label: "Development Time",
+          value: estObj.estimatedDuration,
+          icon: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`
+        },
+        {
+          label: "Recommended Team",
+          value: estObj.recommendedTeamSize,
+          icon: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>`
+        },
+        {
+          label: "Complexity",
+          value: estObj.complexityLevel,
+          icon: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line><line x1="15" y1="3" x2="15" y2="21"></line><line x1="3" y1="9" x2="21" y2="9"></line><line x1="3" y1="15" x2="21" y2="15"></line></svg>`
+        },
+        {
+          label: "Maintenance",
+          value: estObj.estimatedMaintenanceCost,
+          icon: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>`
+        }
+      ];
+
+      estimationCards.forEach((cardData, idx) => {
+        const card = document.createElement("div");
+        card.className = "estimate-card animate-fade-in";
+        card.style.animationDelay = `${idx * 100}ms`;
+
+        card.innerHTML = `
+          <div class="estimate-header">
+            <div class="estimate-icon-wrapper">
+              ${cardData.icon}
+            </div>
+            <span class="estimate-label">${cardData.label}</span>
+          </div>
+          <div class="estimate-value">${escapeHtml(cardData.value)}</div>
+        `;
+        estimatesGrid.appendChild(card);
+      });
+    }
+
     // Typewriter Title execution
     const reportTitle = document.getElementById("report-title");
     if (reportTitle) {
@@ -896,10 +1546,45 @@ document.addEventListener("DOMContentLoaded", () => {
   function compileMarkdownReport() {
     if (!activeAuditData) return "";
     const { risks, failureReasons, solutions, confidenceScore } = activeAuditData;
+
+    const investorReadinessScore = typeof activeAuditData.investorReadinessScore === "number" ? activeAuditData.investorReadinessScore : 50;
+    const marketPotentialScore = typeof activeAuditData.marketPotentialScore === "number" ? activeAuditData.marketPotentialScore : 50;
+    const scalabilityScore = typeof activeAuditData.scalabilityScore === "number" ? activeAuditData.scalabilityScore : 50;
+    const revenueModelScore = typeof activeAuditData.revenueModelScore === "number" ? activeAuditData.revenueModelScore : 50;
+    const executionFeasibilityScore = typeof activeAuditData.executionFeasibilityScore === "number" ? activeAuditData.executionFeasibilityScore : 50;
+
+    let invVerdict = "High Risk Investment";
+    if (investorReadinessScore >= 80) invVerdict = "Investor Ready";
+    else if (investorReadinessScore >= 60) invVerdict = "Needs Improvement";
     
     let md = `# De-Risk AI Feasibility Audit — Assessment Log\n\n`;
     md += `**Concept Description:**\n> ${activeProjectIdea}\n\n`;
     md += `**Overall Feasibility rating:** ${confidenceScore}% (${confidenceScore >= 75 ? "Highly Feasible" : (confidenceScore >= 50 ? "Moderate Risk" : "High Risk")})\n\n`;
+    md += `**Investor Readiness Score:** ${investorReadinessScore}/100 (${invVerdict})\n`;
+    md += `- Market Potential: ${marketPotentialScore}%\n`;
+    md += `- Scalability: ${scalabilityScore}%\n`;
+    md += `- Revenue Model: ${revenueModelScore}%\n`;
+    md += `- Execution Feasibility: ${executionFeasibilityScore}%\n\n`;
+
+    const technicalRisk = typeof activeAuditData.technicalRisk === "number" ? activeAuditData.technicalRisk : 50;
+    const budgetRisk = typeof activeAuditData.budgetRisk === "number" ? activeAuditData.budgetRisk : 50;
+    const marketRisk = typeof activeAuditData.marketRisk === "number" ? activeAuditData.marketRisk : 50;
+    const scalabilityRisk = typeof activeAuditData.scalabilityRisk === "number" ? activeAuditData.scalabilityRisk : 50;
+    const operationalRisk = typeof activeAuditData.operationalRisk === "number" ? activeAuditData.operationalRisk : 50;
+
+    const getRiskLevel = (score) => {
+      if (score >= 70) return "High";
+      if (score >= 40) return "Medium";
+      return "Low";
+    };
+
+    md += `**Project Risk Heatmap:**\n`;
+    md += `- Technical Risk: ${technicalRisk}% (${getRiskLevel(technicalRisk)})\n`;
+    md += `- Budget Risk: ${budgetRisk}% (${getRiskLevel(budgetRisk)})\n`;
+    md += `- Market Risk: ${marketRisk}% (${getRiskLevel(marketRisk)})\n`;
+    md += `- Scalability Risk: ${scalabilityRisk}% (${getRiskLevel(scalabilityRisk)})\n`;
+    md += `- Operational Risk: ${operationalRisk}% (${getRiskLevel(operationalRisk)})\n\n`;
+
     md += `## ⚠️ Critical Failure Triggers\n`;
     
     if (failureReasons && failureReasons.length > 0) {
@@ -929,6 +1614,22 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     } else {
       md += `No actionable blocker mitigation schedules suggested.\n`;
+    }
+
+    md += `\n## 🚀 AI Implementation Roadmap\n`;
+    const roadmap = Array.isArray(activeAuditData.roadmap) ? activeAuditData.roadmap : [];
+    if (roadmap.length > 0) {
+      roadmap.forEach((phaseData, index) => {
+        md += `### ${phaseData.phase} (Duration: ${phaseData.duration})\n`;
+        if (Array.isArray(phaseData.tasks)) {
+          phaseData.tasks.forEach(t => {
+            md += `- ${t}\n`;
+          });
+        }
+        md += `\n`;
+      });
+    } else {
+      md += `No roadmap milestones generated.\n\n`;
     }
 
     md += `---\n*Generated by De-Risk AI - Startup Feasibility Audit Console*`;
@@ -1019,7 +1720,8 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    const { risks, failureReasons, solutions, confidenceScore, timestamp } = activeAuditData;
+    const { risks, failureReasons, solutions, confidenceScore } = activeAuditData;
+    const timestamp = activeAuditData.timestamp || new Date().toLocaleString();
     const projectName = extractProjectName(activeProjectIdea);
 
     const doc = new jsPDFClass('p', 'mm', 'a4');
@@ -1028,29 +1730,20 @@ document.addEventListener("DOMContentLoaded", () => {
     const pageWidth = 210;
     const pageHeight = 297;
     const maxLineWidth = pageWidth - (margin * 2); // 170 mm
+    const bottomMargin = 25;
     
     let y = 25;
 
-    // Helper to draw the header decoration on each page
-    function drawPageHeader() {
-      doc.setDrawColor(99, 102, 241); // indigo
-      doc.setLineWidth(0.5);
-      doc.line(margin, 12, pageWidth - margin, 12);
-      
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(8);
-      doc.setTextColor(156, 163, 175); // gray-400
-      doc.text("De-Risk AI — Conceptual Feasibility Audit Report", margin, 10);
-      
-      const pageCount = doc.getNumberOfPages();
-      doc.text(`Page ${pageCount}`, pageWidth - margin - 12, 10);
+    function checkPageSpace(heightNeeded) {
+      if (y + heightNeeded > pageHeight - bottomMargin) {
+        doc.addPage();
+        y = 25;
+      }
     }
 
-    // Helper to add text and wrap pages
-    function addText(text, size = 10, isBold = false, color = '#334155', lineSpacing = 5.5) {
+    function addBodyText(text, fontSize = 9.5, isBold = false, color = '#334155', spacing = 5) {
       doc.setFont('helvetica', isBold ? 'bold' : 'normal');
-      doc.setFontSize(size);
-      
+      doc.setFontSize(fontSize);
       if (color.startsWith('#')) {
         const r = parseInt(color.substring(1, 3), 16);
         const g = parseInt(color.substring(3, 5), 16);
@@ -1059,145 +1752,243 @@ document.addEventListener("DOMContentLoaded", () => {
       } else {
         doc.setTextColor(51, 65, 85);
       }
-
+      
       const lines = doc.splitTextToSize(text, maxLineWidth);
       lines.forEach(line => {
-        if (y + lineSpacing > 275) {
-          doc.addPage();
-          drawPageHeader();
-          y = 25;
-        }
+        checkPageSpace(spacing);
         doc.text(line, margin, y);
-        y += lineSpacing;
+        y += spacing;
       });
     }
 
-    // Draw first page header
-    drawPageHeader();
+    function addSectionHeading(title) {
+      checkPageSpace(18);
+      y += 2;
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(12.5);
+      doc.setTextColor(79, 70, 229); // Indigo-600
+      doc.text(title, margin, y);
+      
+      // Underline
+      doc.setDrawColor(226, 232, 240); // slate-200
+      doc.setLineWidth(0.5);
+      doc.line(margin, y + 2.5, pageWidth - margin, y + 2.5);
+      
+      y += 8;
+    }
 
-    // 1. Report Header Brand & Title
-    addText("DE-RISK AI CONSULTING GROUP", 9, true, '#6366f1');
-    y += 1.5;
-    addText("CONCEPT FEASIBILITY DIAGNOSTIC REPORT", 16, true, '#0f172a', 7);
+    function drawSummaryCard(projectName, timestamp, confidenceScore, riskLevel, successProbability) {
+      checkPageSpace(45);
+      
+      const cardY = y;
+      const cardHeight = 35;
+      
+      // Background fill
+      doc.setFillColor(248, 250, 252); // slate-50
+      doc.rect(margin, cardY, maxLineWidth, cardHeight, 'F');
+      
+      // Border
+      doc.setDrawColor(226, 232, 240); // slate-200
+      doc.setLineWidth(0.3);
+      doc.rect(margin, cardY, maxLineWidth, cardHeight, 'S');
+      
+      // Draw content inside card
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9.5);
+      doc.setTextColor(71, 85, 105); // slate-600
+      
+      doc.text("Project Name:", margin + 6, cardY + 8);
+      doc.text("Analysis Date:", margin + 6, cardY + 15);
+      doc.text("Risk Level:", margin + 6, cardY + 22);
+      
+      doc.text("Confidence Score:", margin + 90, cardY + 8);
+      doc.text("Success Probability:", margin + 90, cardY + 15);
+      
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(15, 23, 42); // slate-900
+      
+      // Project Name wrapping if too long
+      const truncatedProjName = projectName.length > 35 ? projectName.substring(0, 32) + "..." : projectName;
+      doc.text(truncatedProjName, margin + 32, cardY + 8);
+      doc.text(timestamp, margin + 32, cardY + 15);
+      
+      // Color-coded Risk Level
+      let riskColor = '#d97706'; // amber
+      if (riskLevel === "Low Risk" || riskLevel === "Low") {
+        riskColor = '#059669'; // emerald
+      } else if (riskLevel === "High Risk" || riskLevel === "High") {
+        riskColor = '#e11d48'; // rose
+      }
+      doc.setFont('helvetica', 'bold');
+      const r = parseInt(riskColor.substring(1, 3), 16);
+      const g = parseInt(riskColor.substring(3, 5), 16);
+      const b = parseInt(riskColor.substring(5, 7), 16);
+      doc.setTextColor(r, g, b);
+      doc.text(riskLevel, margin + 32, cardY + 22);
+      
+      // Confidence Score and Success Probability
+      doc.setTextColor(15, 23, 42);
+      doc.setFont('helvetica', 'normal');
+      doc.text(`${confidenceScore}%`, margin + 125, cardY + 8);
+      doc.text(`${successProbability}%`, margin + 128, cardY + 15);
+      
+      y += cardHeight + 5;
+    }
+
+    function addRiskBlock(riskName, severity, description) {
+      checkPageSpace(25);
+      
+      let badgeColor = '#d97706'; // amber
+      if (severity.toLowerCase() === 'high') badgeColor = '#e11d48';
+      if (severity.toLowerCase() === 'low') badgeColor = '#059669';
+      
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(10.5);
+      doc.setTextColor(15, 23, 42);
+      doc.text(riskName, margin, y);
+      
+      const titleWidth = doc.getTextWidth(riskName);
+      
+      doc.setFontSize(8);
+      const r = parseInt(badgeColor.substring(1, 3), 16);
+      const g = parseInt(badgeColor.substring(3, 5), 16);
+      const b = parseInt(badgeColor.substring(5, 7), 16);
+      doc.setTextColor(r, g, b);
+      doc.setFont('helvetica', 'bold');
+      doc.text(`[${severity}]`, margin + titleWidth + 3, y - 0.5);
+      
+      y += 5;
+      
+      addBodyText(description, 9.2, false, '#475569', 4.5);
+      y += 2.5;
+    }
+
+    function addChallengeSolutionBlock(idx, challenge, solution) {
+      checkPageSpace(25);
+      
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(10);
+      doc.setTextColor(15, 23, 42);
+      doc.text(`Blocker Challenge #${idx}`, margin, y);
+      y += 5;
+      
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.setTextColor(217, 119, 6); // amber-600
+      doc.text("Challenge:", margin + 3, y);
+      
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(71, 85, 105);
+      const cLines = doc.splitTextToSize(challenge, maxLineWidth - 25);
+      cLines.forEach(line => {
+        checkPageSpace(4.5);
+        doc.text(line, margin + 23, y);
+        y += 4.5;
+      });
+      
+      y += 1;
+      
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.setTextColor(5, 150, 105); // emerald-600
+      doc.text("Recommendation:", margin + 3, y);
+      
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(51, 65, 85);
+      const sLines = doc.splitTextToSize(solution, maxLineWidth - 32);
+      sLines.forEach(line => {
+        checkPageSpace(4.5);
+        doc.text(line, margin + 30, y);
+        y += 4.5;
+      });
+      
+      y += 3;
+    }
+
+    // Draw top branding band
+    doc.setFillColor(79, 70, 229); // Indigo-600
+    doc.rect(0, 0, pageWidth, 5, 'F');
+    
+    y = 20;
+    
+    // Header Title
+    addBodyText("DE-RISK AI CONSULTING GROUP", 8.5, true, '#4f46e5', 5);
+    addBodyText("FEASIBILITY ASSESSMENT & DIAGNOSTIC REPORT", 16, true, '#0f172a', 8);
     y += 4;
 
-    // Metadata Block (Table-like details)
-    doc.setFillColor(248, 250, 252); // slate-50
-    doc.setDrawColor(226, 232, 240); // slate-200
-    doc.setLineWidth(0.2);
-    
-    // Draw background rectangle for metadata
-    const metaY = y - 2;
-    const metaHeight = 30;
-    doc.rect(margin, metaY, maxLineWidth, metaHeight, 'FD');
-    
-    // Write metadata items inside the rounded rect
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(9.5);
-    doc.setTextColor(71, 85, 105); // slate-600
-    doc.text("Project Name:", margin + 5, metaY + 8);
-    doc.text("Audit Time:", margin + 5, metaY + 15);
-    doc.text("Confidence Score:", margin + 5, metaY + 22);
-
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9.5);
-    doc.setTextColor(15, 23, 42); // slate-900
-    doc.text(projectName, margin + 40, metaY + 8);
-    doc.text(timestamp || new Date().toLocaleString(), margin + 40, metaY + 15);
-
-    // Color-coded rating output
-    const ratingText = `${confidenceScore}%`;
-    let ratingColor = '#d97706'; // amber
-    let ratingLabel = "Moderate Risk";
+    // Determine Risk Level string
+    let riskLevelStr = "Moderate Risk";
     if (confidenceScore >= 75) {
-      ratingColor = '#059669'; // emerald
-      ratingLabel = "Highly Feasible";
+      riskLevelStr = "Low Risk";
     } else if (confidenceScore < 50) {
-      ratingColor = '#e11d48'; // rose
-      ratingLabel = "High Risk";
-    }
-    
-    doc.setFont('helvetica', 'bold');
-    doc.text(`${ratingText} (${ratingLabel})`, margin + 40, metaY + 22);
-    
-    // Restore text color to slate
-    doc.setTextColor(51, 65, 85);
-    y = metaY + metaHeight + 8;
-
-    // 2. Section: Description
-    addText("1. PROJECT CONCEPT & DESCRIPTION", 11, true, '#6366f1');
-    y += 1.5;
-    addText(activeProjectIdea, 9.5, false, '#334155');
-    y += 6;
-
-    // 3. Section: Triggers
-    addText("2. CRITICAL FAILURE TRIGGERS", 11, true, '#6366f1');
-    y += 2.5;
-    
-    if (failureReasons && failureReasons.length > 0) {
-      failureReasons.forEach((reason, index) => {
-        addText(`  ${index + 1}.  ${reason}`, 9.5, false, '#334155');
-        y += 1.5;
-      });
-      y += 4;
-    } else {
-      addText("No failure triggers isolated by conceptual scanner.", 9.5, false, '#64748b');
-      y += 6;
+      riskLevelStr = "High Risk";
     }
 
-    // 4. Section: Risks
-    addText("3. SYSTEM RISK BREAKDOWN", 11, true, '#6366f1');
-    y += 2.5;
+    // Draw Summary Grid Block
+    drawSummaryCard(projectName, timestamp, confidenceScore, riskLevelStr, confidenceScore);
 
+    // Section 1: Project Concept Description
+    addSectionHeading("1. PROJECT CONCEPT DESCRIPTION");
+    addBodyText(activeProjectIdea, 9.5, false, '#334155', 5);
+    y += 5;
+
+    // Section 2: Risks
+    addSectionHeading("2. CRITICAL CONCEPTUAL RISKS");
     if (risks && risks.length > 0) {
-      risks.forEach((riskObj, index) => {
-        const sev = riskObj.severity || "Medium";
-        let sevColor = '#d97706'; // amber
-        if (sev.toLowerCase() === 'high') sevColor = '#e11d48';
-        if (sev.toLowerCase() === 'low') sevColor = '#059669';
-
-        addText(`Risk #${index + 1}: ${riskObj.risk}`, 10, true, '#0f172a');
-        y += 1.2;
-        addText(`Severity: ${sev}`, 9, true, sevColor);
-        y += 1.2;
-        addText(riskObj.description, 9.5, false, '#475569');
-        y += 4.5;
+      risks.forEach(riskObj => {
+        addRiskBlock(riskObj.risk, riskObj.severity || "Medium", riskObj.description);
       });
-      y += 2.5;
     } else {
-      addText("No architectural engineering risks detected in concept workspace.", 9.5, false, '#64748b');
-      y += 6;
+      addBodyText("No significant technical or conceptual risks detected for this layout.", 9.5, false, '#64748b', 5);
+      y += 4;
     }
+    y += 3;
 
-    // 5. Section: Challenges & Mitigations
-    addText("4. CHALLENGES & RECOMMENDED MITIGATIONS", 11, true, '#6366f1');
-    y += 2.5;
-
+    // Section 3: Challenges & Recommendations
+    addSectionHeading("3. BLOCKER CHALLENGES & RECOMMENDED MITIGATIONS");
     if (solutions && solutions.length > 0) {
       solutions.forEach((pair, index) => {
-        addText(`Isolated Blocker #${index + 1}`, 10, true, '#0f172a');
-        y += 1.2;
-        addText(`Challenge: ${pair.challenge}`, 9.5, false, '#475569');
-        y += 1.2;
-        addText(`Recommended Solution: ${pair.solution}`, 9.5, true, '#059669');
-        y += 4.5;
+        addChallengeSolutionBlock(index + 1, pair.challenge, pair.solution);
       });
-      y += 3;
     } else {
-      addText("No core blocker mitigation strategies mapped.", 9.5, false, '#64748b');
-      y += 6;
+      addBodyText("No critical blocker challenges or mitigation actions isolated.", 9.5, false, '#64748b', 5);
+      y += 4;
+    }
+    y += 6;
+
+    // Section 4: Confidential Disclaimer Note
+    checkPageSpace(20);
+    addBodyText("CONFIDENTIAL NOTICE", 8, true, '#94a3b8', 4);
+    addBodyText("This document contains automated conceptual diagnostics compiled by artificial intelligence engines based on startup heuristics. Findings represent speculative software modeling and structural validation checklists.", 7.8, false, '#94a3b8', 3.8);
+
+    // Post-process pages to add page headers and footers
+    const totalPages = doc.internal.getNumberOfPages();
+    for (let i = 1; i <= totalPages; i++) {
+      doc.setPage(i);
+      
+      // Page Header Line & text
+      doc.setDrawColor(226, 232, 240); // slate-200
+      doc.setLineWidth(0.3);
+      doc.line(margin, 12, pageWidth - margin, 12);
+      
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8);
+      doc.setTextColor(100, 116, 139); // slate-500
+      doc.text("De-Risk AI — Enterprise Feasibility Report", margin, 9);
+      
+      // Page Footer Line & text
+      doc.setDrawColor(226, 232, 240); // slate-200
+      doc.setLineWidth(0.3);
+      doc.line(margin, pageHeight - 12, pageWidth - margin, pageHeight - 12);
+      
+      doc.text("Generated by De-Risk AI", margin, pageHeight - 8);
+      doc.text(`Page ${i} of ${totalPages}`, pageWidth - margin - 15, pageHeight - 8);
     }
 
-    // Final Footer Note
-    addText("CONFIDENTIAL NOTICE", 8, true, '#94a3b8');
-    y += 1;
-    addText("This document contains conceptual system blueprints generated by artificial intelligence. Results represent speculative architectural modeling and are intended solely for validation testing under pilot environments.", 8, false, '#94a3b8', 4);
-
-    // Save File
-    doc.save("project-analysis-report.pdf");
+    doc.save("De-Risk-AI-Report.pdf");
     
     logActivity("Exported audit report as PDF file");
-    showToast("PDF report downloaded successfully!", "success");
+    showToast("PDF Report Downloaded Successfully", "success");
   }
 
   // ----------------------------------------------------
@@ -1431,8 +2222,17 @@ document.addEventListener("DOMContentLoaded", () => {
     if (history.length === 0) {
       tableBody.innerHTML = `
         <tr>
-          <td colspan="5" style="text-align: center; color: var(--text-dim); padding: 3rem 0;">
-            No reports match the active workspace filters.
+          <td colspan="5" style="text-align: center; padding: 4rem 1rem;">
+            <div class="empty-state-container">
+              <div class="empty-state-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+              </div>
+              <h4 class="empty-state-title">No search matches</h4>
+              <p class="empty-state-desc">No assessment files matched your active database keywords.</p>
+            </div>
           </td>
         </tr>
       `;
@@ -1569,8 +2369,20 @@ document.addEventListener("DOMContentLoaded", () => {
     if (history.length === 0) {
       dbTableBody.innerHTML = `
         <tr>
-          <td colspan="4" style="text-align: center; color: var(--text-dim); padding: 2.5rem 0;">
-            No recent analyses found.
+          <td colspan="4" style="text-align: center; padding: 4rem 1rem;">
+            <div class="empty-state-container">
+              <div class="empty-state-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <line x1="10" y1="9" x2="8" y2="9"></line>
+                </svg>
+              </div>
+              <h4 class="empty-state-title">No assessment history</h4>
+              <p class="empty-state-desc">Your recent project feasibility assessments will be cataloged here.</p>
+            </div>
           </td>
         </tr>
       `;

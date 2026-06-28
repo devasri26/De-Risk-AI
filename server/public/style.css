@@ -28,15 +28,15 @@
   --rose-glow: hsla(346, 87%, 57%, 0.15);
   
   /* Radii & Shadows */
-  --radius-lg: 16px;
-  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-md: 16px;
   --radius-sm: 8px;
-  --shadow-premium: 0 16px 48px -8px rgba(0, 0, 0, 0.75);
-  --shadow-glow: 0 0 24px rgba(99, 102, 241, 0.15);
+  --shadow-premium: 0 20px 50px -12px rgba(0, 0, 0, 0.85);
+  --shadow-glow: 0 0 30px rgba(99, 102, 241, 0.2);
   
   /* Transitions */
-  --transition-normal: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  --transition-fast: all 0.15s ease-out;
+  --transition-normal: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-fast: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* Base resets */
@@ -3232,6 +3232,500 @@ body.landing-page {
   }
 }
 
+/* SWOT Section Styles */
+.swot-grid-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
 
+@media (max-width: 768px) {
+  .swot-grid-container {
+    grid-template-columns: 1fr;
+  }
+}
 
+.swot-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  transition: var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-premium);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
 
+.swot-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 3px;
+  background: transparent;
+  transition: var(--transition-fast);
+}
+
+.swot-strengths::before { background: linear-gradient(90deg, var(--emerald-color), transparent); }
+.swot-weaknesses::before { background: linear-gradient(90deg, var(--rose-color), transparent); }
+.swot-opportunities::before { background: linear-gradient(90deg, var(--primary-color), transparent); }
+.swot-threats::before { background: linear-gradient(90deg, var(--amber-color), transparent); }
+
+.swot-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 255, 255, 0.15);
+  background: var(--bg-card-hover);
+  box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.5);
+}
+
+.swot-strengths:hover { border-color: rgba(16, 185, 129, 0.3); }
+.swot-weaknesses:hover { border-color: rgba(244, 63, 94, 0.3); }
+.swot-opportunities:hover { border-color: rgba(99, 102, 241, 0.3); }
+.swot-threats:hover { border-color: rgba(217, 119, 6, 0.3); }
+
+.swot-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.swot-icon-wrapper {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+}
+
+.swot-strengths .swot-icon-wrapper {
+  background: var(--emerald-glow);
+  color: var(--emerald-color);
+  border-color: rgba(16, 185, 129, 0.2);
+}
+
+.swot-weaknesses .swot-icon-wrapper {
+  background: var(--rose-glow);
+  color: var(--rose-color);
+  border-color: rgba(244, 63, 94, 0.2);
+}
+
+.swot-opportunities .swot-icon-wrapper {
+  background: var(--primary-glow);
+  color: var(--primary-color);
+  border-color: rgba(99, 102, 241, 0.2);
+}
+
+.swot-threats .swot-icon-wrapper {
+  background: var(--amber-glow);
+  color: var(--amber-color);
+  border-color: rgba(217, 119, 6, 0.2);
+}
+
+.swot-card-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-bright);
+  margin: 0;
+}
+
+.swot-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.swot-item {
+  display: flex;
+  gap: 0.65rem;
+  align-items: flex-start;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.swot-bullet {
+  font-weight: bold;
+transform: translateY(30px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.scroll-fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(0.98); }
+}
+
+.animate-pulse {
+  animation: pulse 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 1024px) {
+  .testimonials-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .steps-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .landing-nav-links {
+    display: none;
+  }
+  .hero-title {
+    font-size: 3rem;
+  }
+  .preview-stats-row {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  .stats-grid-landing {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .footer-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2.5rem;
+  }
+  .steps-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .testimonials-grid {
+    grid-template-columns: 1fr;
+  }
+  .stats-grid-landing {
+    grid-template-columns: 1fr;
+    padding: 2rem;
+  }
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .hero-title {
+    font-size: 2.25rem;
+  }
+  .hero-desc {
+    font-size: 1.05rem;
+  }
+  .btn-hero-primary, .btn-hero-secondary, .btn-secondary-glow {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* SWOT Section Styles */
+.swot-grid-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+  .swot-grid-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+.swot-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  transition: var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-premium);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.swot-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 3px;
+  background: transparent;
+  transition: var(--transition-fast);
+}
+
+.swot-strengths::before { background: linear-gradient(90deg, var(--emerald-color), transparent); }
+.swot-weaknesses::before { background: linear-gradient(90deg, var(--rose-color), transparent); }
+.swot-opportunities::before { background: linear-gradient(90deg, var(--primary-color), transparent); }
+.swot-threats::before { background: linear-gradient(90deg, var(--amber-color), transparent); }
+
+.swot-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 255, 255, 0.15);
+  background: var(--bg-card-hover);
+  box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.5);
+}
+
+.swot-strengths:hover { border-color: rgba(16, 185, 129, 0.3); }
+.swot-weaknesses:hover { border-color: rgba(244, 63, 94, 0.3); }
+.swot-opportunities:hover { border-color: rgba(99, 102, 241, 0.3); }
+.swot-threats:hover { border-color: rgba(217, 119, 6, 0.3); }
+
+.swot-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.swot-icon-wrapper {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+}
+
+.swot-strengths .swot-icon-wrapper {
+  background: var(--emerald-glow);
+  color: var(--emerald-color);
+  border-color: rgba(16, 185, 129, 0.2);
+}
+
+.swot-weaknesses .swot-icon-wrapper {
+  background: var(--rose-glow);
+  color: var(--rose-color);
+  border-color: rgba(244, 63, 94, 0.2);
+}
+
+.swot-opportunities .swot-icon-wrapper {
+  background: var(--primary-glow);
+  color: var(--primary-color);
+  border-color: rgba(99, 102, 241, 0.2);
+}
+
+.swot-threats .swot-icon-wrapper {
+  background: var(--amber-glow);
+  color: var(--amber-color);
+  border-color: rgba(217, 119, 6, 0.2);
+}
+
+.swot-card-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-bright);
+  margin: 0;
+}
+
+.swot-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.swot-item {
+  display: flex;
+  gap: 0.65rem;
+  align-items: flex-start;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.swot-bullet {
+  font-weight: bold;
+  font-size: 1.2rem;
+  line-height: 0.8;
+  flex-shrink: 0;
+}
+
+.swot-strengths .swot-bullet { color: var(--emerald-color); }
+.swot-weaknesses .swot-bullet { color: var(--rose-color); }
+.swot-opportunities .swot-bullet { color: var(--primary-color); }
+.swot-threats .swot-bullet { color: var(--amber-color); }
+
+/* AI Estimates Grid Styles */
+.estimates-grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.25rem;
+  margin-top: 1rem;
+}
+
+@media (max-width: 600px) {
+  .estimates-grid-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+.estimate-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  transition: var(--transition-normal);
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-premium);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.estimate-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--primary-color);
+  background: var(--bg-card-hover);
+  box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.5);
+}
+
+.estimate-header {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.estimate-icon-wrapper {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary-glow);
+  color: var(--primary-color);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.estimate-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.estimate-value {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: var(--text-bright);
+  font-family: 'Outfit', sans-serif;
+  line-height: 1.2;
+}
+
+/* Premium Empty States */
+.empty-state-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.empty-state-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--primary-glow);
+  color: var(--primary-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+  border: 1px solid rgba(99, 102, 241, 0.15);
+  box-shadow: 0 8px 24px -4px rgba(99, 102, 241, 0.25);
+  animation: pulseEmptyIcon 3s infinite alternate ease-in-out;
+}
+
+@keyframes pulseEmptyIcon {
+  0% { transform: scale(1); box-shadow: 0 8px 24px -4px rgba(99, 102, 241, 0.2); }
+  100% { transform: scale(1.08); box-shadow: 0 8px 32px 0px rgba(99, 102, 241, 0.35); }
+}
+
+.empty-state-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-bright);
+  margin-bottom: 0.35rem;
+}
+
+.empty-state-desc {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  max-width: 280px;
+  line-height: 1.5;
+}
+
+/* Animated background gradient & orbs */
+.bg-orb-container {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  overflow: hidden;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.bg-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(140px);
+  opacity: 0.12;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.orb-1 {
+  width: 50vw;
+  height: 50vw;
+  top: -10vw; left: -10vw;
+  background: radial-gradient(circle, var(--primary-color) 0%, transparent 80%);
+  animation: floatOrb1 25s infinite alternate ease-in-out;
+}
+
+.orb-2 {
+  width: 40vw;
+  height: 40vw;
+  bottom: -5vw; right: -5vw;
+  background: radial-gradient(circle, var(--emerald-color) 0%, transparent 80%);
+  animation: floatOrb2 20s infinite alternate ease-in-out;
+}
+
+.orb-3 {
+  width: 35vw;
+  height: 35vw;
+  top: 30%; left: 50%;
+  background: radial-gradient(circle, var(--amber-color) 0%, transparent 80%);
+  animation: floatOrb3 30s infinite alternate ease-in-out;
+}
+
+@keyframes floatOrb1 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(12vw, 6vw) scale(1.15); }
+}
+
+@keyframes floatOrb2 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(-10vw, -6vw) scale(1.1); }
+}
+
+@keyframes floatOrb3 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(-6vw, 10vw) scale(1.05); }
+}

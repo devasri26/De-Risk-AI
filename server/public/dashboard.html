@@ -27,6 +27,13 @@
 </head>
 <body>
 
+  <!-- Floating background orbs -->
+  <div class="bg-orb-container">
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
+    <div class="bg-orb orb-3"></div>
+  </div>
+
   <!-- Full screen Layout Wrapper -->
   <div class="app-container">
     
@@ -465,7 +472,7 @@
                 <span>Print PDF</span>
               </button>
 
-              <button class="btn-action-pill" id="action-pdf-download-btn" title="Download PDF Report">
+              <button class="btn-action-pill" id="action-pdf-download-btn" title="Download PDF Report" style="display: none;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                   <polyline points="14 2 14 8 20 8"></polyline>
@@ -535,6 +542,95 @@
 
             </div>
 
+            <!-- Row 1.5: Investor Readiness Assessment -->
+            <div class="section-container animate-fade-in" style="margin-top: 2.5rem;">
+              <h3 class="section-title">Investor Readiness Assessment</h3>
+              <div class="glass-card" style="display: flex; flex-direction: column; gap: 1.5rem; margin-top: 1rem;">
+                <div style="border-bottom: 1px dashed var(--border-dim); padding-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                  <div>
+                    <span style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); font-weight: 600;">Overall Viability</span>
+                    <h2 id="investor-verdict-title" style="font-size: 1.6rem; font-weight: 850; margin-top: 0.25rem; background: linear-gradient(135deg, #ffffff 40%, var(--text-muted)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Calculating...</h2>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 1.25rem;">
+                    <div id="investor-score-value" style="font-size: 2.4rem; font-weight: 800; font-family: 'Outfit', sans-serif;">0/100</div>
+                    <span id="investor-verdict-badge" class="badge-pill">Calculating...</span>
+                  </div>
+                </div>
+                
+                <div class="cards-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.25rem;" id="investor-metrics-grid">
+                  <!-- Dynamic metric cards will be injected here -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Row 1.75: Project Risk Heatmap -->
+            <div class="section-container animate-fade-in" style="margin-top: 2.5rem;">
+              <h3 class="section-title">Project Risk Heatmap</h3>
+              <div class="diagnostics-row" style="margin-top: 1rem; display: flex; gap: 1.5rem; flex-wrap: wrap;">
+                
+                <!-- Left: Heatmap cards -->
+                <div class="glass-card" style="flex: 1.2; display: flex; flex-direction: column; gap: 1rem; padding: 1.5rem; min-width: 320px;">
+                  <h4 class="card-subtitle-main" style="margin-bottom: 0.5rem; font-size: 1.1rem;">Risk Vectors & Severity</h4>
+                  <div style="display: flex; flex-direction: column; gap: 0.85rem;" id="heatmap-list-container">
+                    <!-- Dynamic heatmap cards will be injected here -->
+                  </div>
+                </div>
+
+                <!-- Right: Chart.js Radar Visualization -->
+                <div class="glass-card" style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1.5rem; min-width: 300px; min-height: 320px;">
+                  <h4 class="card-subtitle-main" style="margin-bottom: 1.5rem; align-self: flex-start; font-size: 1.1rem;">Risk Profiler Visualization</h4>
+                  <div style="width: 100%; height: 260px; position: relative;">
+                    <canvas id="riskRadarChart"></canvas>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Row 1.85: AI Roadmap Timeline -->
+            <div class="section-container animate-fade-in" style="margin-top: 2.5rem;">
+              <h3 class="section-title">AI Implementation Roadmap</h3>
+              <div class="glass-card" style="margin-top: 1rem; padding: 2rem; display: flex; flex-direction: column; gap: 1.5rem;">
+                <h4 class="card-subtitle-main" style="margin-bottom: 0.5rem; font-size: 1.1rem;">Execution Phases & Timeline</h4>
+                <div id="roadmap-timeline-container" style="display: flex; flex-direction: column; gap: 2rem; position: relative; border-left: 2px dashed rgba(255, 255, 255, 0.1); margin-left: 1.5rem; padding-left: 2.25rem;">
+                  <!-- Dynamic timeline steps will be injected here -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Row 1.9: What-If Simulator -->
+            <div class="section-container animate-fade-in" style="margin-top: 2.5rem;">
+              <h3 class="section-title">Scenario What-If Simulator</h3>
+              <div class="glass-card" style="margin-top: 1rem; padding: 2rem; display: flex; flex-direction: column; gap: 2rem;">
+                <h4 class="card-subtitle-main" style="margin-bottom: 0.5rem; font-size: 1.1rem;">Model Alternative Decision Paths</h4>
+                
+                <!-- Simulator interactive cards grid -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem;" id="simulator-controls-grid">
+                  <!-- Dynamic control cards will be injected here -->
+                </div>
+
+                <!-- Comparison & Charts Row -->
+                <div style="display: flex; gap: 2rem; flex-wrap: wrap; margin-top: 1rem;">
+                  <!-- Left: Comparative numerical display -->
+                  <div class="glass-card" style="flex: 1; display: flex; flex-direction: column; gap: 1.25rem; padding: 1.5rem; min-width: 280px; margin: 0; background: rgba(255, 255, 255, 0.01);">
+                    <h5 style="margin: 0; font-size: 1rem; font-weight: 800; color: var(--text-bright);">Alternative Projection</h5>
+                    <div id="simulator-comparison-list" style="display: flex; flex-direction: column; gap: 1.25rem;">
+                      <!-- Comparison items -->
+                    </div>
+                  </div>
+
+                  <!-- Right: Chart.js Bar Chart -->
+                  <div class="glass-card" style="flex: 1.2; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1.5rem; min-width: 300px; min-height: 280px; margin: 0;">
+                    <h5 style="margin: 0 0 1rem 0; align-self: flex-start; font-size: 1rem; font-weight: 800; color: var(--text-bright);">Projection Chart</h5>
+                    <div style="width: 100%; height: 200px; position: relative;">
+                      <canvas id="simulatorChart"></canvas>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
             <!-- Row 2: System Risks Cards Grid -->
             <div class="section-container">
               <h3 class="section-title">System Risk Breakdown</h3>
@@ -548,6 +644,22 @@
               <h3 class="section-title">Blockers & Mitigations</h3>
               <div class="mitigation-grid" id="solutions-list">
                 <!-- Dynamic challenge solution mappings -->
+              </div>
+            </div>
+
+            <!-- Row 4: SWOT Strategic Analysis Grid -->
+            <div class="section-container animate-fade-in" style="margin-top: 2.5rem;">
+              <h3 class="section-title">SWOT Strategic Analysis</h3>
+              <div class="swot-grid-container" id="swot-grid">
+                <!-- Dynamic SWOT 2x2 cards -->
+              </div>
+            </div>
+
+            <!-- Row 5: AI Budget & Timeline Estimator -->
+            <div class="section-container animate-fade-in" style="margin-top: 2.5rem;">
+              <h3 class="section-title">AI Budget & Timeline Estimator</h3>
+              <div class="estimates-grid-container" id="estimates-grid">
+                <!-- Dynamic Estimates cards -->
               </div>
             </div>
 

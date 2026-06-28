@@ -54,7 +54,14 @@ export const loginUser = async (email, password) => {
     return response.data;
   } catch (error) {
     console.error('Login request failed:', error);
-    const message = error.response?.data?.error || 'Invalid credentials or login failed.';
+    let message = 'Invalid credentials or login failed.';
+    if (error.response) {
+      message = error.response.data?.error || message;
+    } else if (error.request) {
+      message = 'Connection failed. Ensure the backend server is running.';
+    } else {
+      message = error.message || message;
+    }
     throw new Error(message);
   }
 };
@@ -71,7 +78,14 @@ export const signupUser = async (email, password) => {
     return response.data;
   } catch (error) {
     console.error('Signup request failed:', error);
-    const message = error.response?.data?.error || 'Failed to create account.';
+    let message = 'Failed to create account.';
+    if (error.response) {
+      message = error.response.data?.error || message;
+    } else if (error.request) {
+      message = 'Connection failed. Ensure the backend server is running.';
+    } else {
+      message = error.message || message;
+    }
     throw new Error(message);
   }
 };

@@ -37,6 +37,7 @@ export default function App() {
   const handleReset = () => {
     setAnalysisResult(null);
     setError(null);
+    setIsAnalyzing(false);
   };
 
   const handleSignOut = () => {
@@ -52,7 +53,7 @@ export default function App() {
 
       {/* Header component */}
       <header className="header-bar">
-        <div className="logo-group">
+        <div className="logo-group" onClick={handleReset} style={{ cursor: 'pointer' }}>
           <div className="logo-cube">
             {/* Visual AI warning logo representation */}
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#ffffff' }}>

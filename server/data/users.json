@@ -46,5 +46,35 @@
     "email": "testuser_1781323436068@example.com",
     "password": "$2a$10$IH3rP6AURNN.cecJAppRmOlzpOqiM8wVTUzKnXjSYw5zIO1C6jDae",
     "createdAt": "2026-06-13T04:03:56.452Z"
+  },
+  {
+    "id": "1782279273774mk8qjhx",
+    "email": "antigravity_test@company.com",
+    "password": "$2a$10$zzzlv7YaI1pv34bXjgou7eG/c4xTyMBxnZvEbdFtGQZ7GvECqPHiW",
+    "createdAt": "2026-06-24T05:34:33.774Z"
+  },
+  {
+    "id": "1782292356438gpb59ai",
+    "email": "test_subagent@company.com",
+    "password": "$2a$10$pOWh2wWjqGWqcsahD2mmGePCx0kroWfim2KCFjdGUjgvC2LpOQpLi",
+    "createdAt": "2026-06-24T09:12:36.438Z"
+  },
+  {
+    "id": "1782293821236ftkdgyn",
+    "email": "testuser_antigravity@company.com",
+    "password": "$2a$10$k7IlmA8.JyTfuIxvkjedQOVd8Y1Ao3ykflK1gGj2eZvwdFh/mfFPu",
+    "createdAt": "2026-06-24T09:37:01.236Z"
+  },
+  {
+    "id": "17823703648301emb4ge",
+    "email": "gdevasri11@gmail.com",
+    "password": "$2a$10$UntuxSXmznb5mlPRbY4IFujkASDVLz8V69w97sofAbCBRoyDdJo2G",
+    "createdAt": "2026-06-25T06:52:44.830Z"
+  },
+  {
+    "id": "17825754776111glpivd",
+    "email": "testuser@example.com",
+    "password": "$2a$10$NMN1e4sbEsL42qY8ehakuOIFuJyt6/TysfkmS4osef6ciNKEbpkwG",
+    "createdAt": "2026-06-27T15:51:17.611Z"
   }
 ]
