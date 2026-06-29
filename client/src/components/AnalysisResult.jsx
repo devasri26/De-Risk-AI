@@ -105,8 +105,8 @@ export default function AnalysisResult({ result, onReset }) {
               {
                 label: 'After',
                 data: [successSim, riskSim, investorSim],
-                backgroundColor: 'rgba(99, 102, 241, 0.65)',
-                borderColor: 'hsl(250, 84%, 63%)',
+                backgroundColor: 'rgba(34, 197, 94, 0.65)',
+                borderColor: '#22C55E',
                 borderWidth: 1
               }
             ]
@@ -188,12 +188,12 @@ export default function AnalysisResult({ result, onReset }) {
             datasets: [{
               label: 'Risk Level %',
               data: [technicalRisk, budgetRisk, marketRisk, scalabilityRisk, operationalRisk],
-              backgroundColor: 'rgba(244, 63, 94, 0.2)',
-              borderColor: 'hsl(346, 87%, 57%)',
-              pointBackgroundColor: 'hsl(346, 87%, 57%)',
-              pointBorderColor: '#ffffff',
-              pointHoverBackgroundColor: '#ffffff',
-              pointHoverBorderColor: 'hsl(346, 87%, 57%)',
+              backgroundColor: 'rgba(245, 158, 11, 0.15)',
+              borderColor: '#F59E0B',
+              pointBackgroundColor: '#F59E0B',
+              pointBorderColor: '#FAFAFA',
+              pointHoverBackgroundColor: '#FAFAFA',
+              pointHoverBorderColor: '#F59E0B',
               borderWidth: 2
             }]
           },

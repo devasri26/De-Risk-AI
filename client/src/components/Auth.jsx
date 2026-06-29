@@ -44,7 +44,7 @@ export default function Auth({ onAuthSuccess }) {
 
   return (
     <div className="auth-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '2rem 1rem' }}>
-      <div className="glass-card auth-card" style={{ maxWidth: '440px', width: '100%', padding: '2.5rem', borderRadius: '16px', border: '1px solid var(--border-dim)', background: 'rgba(17, 24, 39, 0.7)', backdropFilter: 'blur(16px)', boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.4)' }}>
+      <div className="glass-card auth-card" style={{ maxWidth: '440px', width: '100%', padding: '2.5rem', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-dim)', background: 'var(--bg-card)', boxShadow: 'var(--shadow-premium)' }}>
         
         {/* Toggle tabs */}
         <div style={{ display: 'flex', gap: '1rem', borderBottom: '1px solid var(--border-dim)', marginBottom: '2rem', paddingBottom: '0.5rem' }}>
@@ -53,13 +53,13 @@ export default function Auth({ onAuthSuccess }) {
             style={{ 
               background: 'none', 
               border: 'none', 
-              color: isLogin ? 'var(--accent-color, #a855f7)' : 'var(--text-muted, #9ca3af)', 
+              color: isLogin ? 'var(--primary-color)' : 'var(--text-muted)', 
               fontSize: '1.1rem', 
               fontWeight: 700, 
               cursor: 'pointer', 
               paddingBottom: '0.5rem',
-              borderBottom: isLogin ? '2px solid var(--accent-color, #a855f7)' : '2px solid transparent',
-              transition: 'all 0.3s ease'
+              borderBottom: isLogin ? '2px solid var(--primary-color)' : '2px solid transparent',
+              transition: 'all 0.2s ease'
             }}
           >
             Sign In
@@ -69,13 +69,13 @@ export default function Auth({ onAuthSuccess }) {
             style={{ 
               background: 'none', 
               border: 'none', 
-              color: !isLogin ? 'var(--accent-color, #a855f7)' : 'var(--text-muted, #9ca3af)', 
+              color: !isLogin ? 'var(--primary-color)' : 'var(--text-muted)', 
               fontSize: '1.1rem', 
               fontWeight: 700, 
               cursor: 'pointer', 
               paddingBottom: '0.5rem',
-              borderBottom: !isLogin ? '2px solid var(--accent-color, #a855f7)' : '2px solid transparent',
-              transition: 'all 0.3s ease'
+              borderBottom: !isLogin ? '2px solid var(--primary-color)' : '2px solid transparent',
+              transition: 'all 0.2s ease'
             }}
           >
             Register
@@ -103,7 +103,7 @@ export default function Auth({ onAuthSuccess }) {
 
         <form onSubmit={handleSubmit}>
           <div style={{ marginBottom: '1.25rem' }}>
-            <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted, #9ca3af)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
               Corporate Email
             </label>
             <input 
@@ -112,12 +112,12 @@ export default function Auth({ onAuthSuccess }) {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="name@company.com" 
               required 
-              style={{ width: '100%', padding: '0.75rem 1rem', background: 'rgba(31, 41, 55, 0.5)', border: '1px solid var(--border-dim, #374151)', borderRadius: '8px', color: '#ffffff', outline: 'none', transition: 'border-color 0.2s ease' }}
+              style={{ width: '100%', padding: '0.75rem 1rem', background: 'var(--bg-input)', border: '1px solid var(--border-dim)', borderRadius: 'var(--radius-md)', color: '#ffffff', outline: 'none', transition: 'border-color 0.2s ease' }}
             />
           </div>
 
           <div style={{ marginBottom: isLogin ? '2rem' : '1.25rem' }}>
-            <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted, #9ca3af)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
               Password
             </label>
             <input 
@@ -126,13 +126,13 @@ export default function Auth({ onAuthSuccess }) {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••" 
               required 
-              style={{ width: '100%', padding: '0.75rem 1rem', background: 'rgba(31, 41, 55, 0.5)', border: '1px solid var(--border-dim, #374151)', borderRadius: '8px', color: '#ffffff', outline: 'none', transition: 'border-color 0.2s ease' }}
+              style={{ width: '100%', padding: '0.75rem 1rem', background: 'var(--bg-input)', border: '1px solid var(--border-dim)', borderRadius: 'var(--radius-md)', color: '#ffffff', outline: 'none', transition: 'border-color 0.2s ease' }}
             />
           </div>
 
           {!isLogin && (
             <div style={{ marginBottom: '2rem' }}>
-              <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted, #9ca3af)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                 Confirm Password
               </label>
               <input 
@@ -141,7 +141,7 @@ export default function Auth({ onAuthSuccess }) {
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="••••••••" 
                 required 
-                style={{ width: '100%', padding: '0.75rem 1rem', background: 'rgba(31, 41, 55, 0.5)', border: '1px solid var(--border-dim, #374151)', borderRadius: '8px', color: '#ffffff', outline: 'none', transition: 'border-color 0.2s ease' }}
+                style={{ width: '100%', padding: '0.75rem 1rem', background: 'var(--bg-input)', border: '1px solid var(--border-dim)', borderRadius: 'var(--radius-md)', color: '#ffffff', outline: 'none', transition: 'border-color 0.2s ease' }}
               />
             </div>
           )}
@@ -149,7 +149,7 @@ export default function Auth({ onAuthSuccess }) {
           <button 
             type="submit" 
             disabled={loading}
-            style={{ width: '100%', padding: '0.85rem', background: 'var(--accent-color, #a855f7)', border: 'none', borderRadius: '8px', color: '#ffffff', fontSize: '0.95rem', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s ease', opacity: loading ? 0.7 : 1 }}
+            style={{ width: '100%', padding: '0.85rem', background: 'var(--primary-color)', border: 'none', borderRadius: 'var(--radius-md)', color: '#09090B', fontSize: '0.95rem', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s ease', opacity: loading ? 0.7 : 1 }}
           >
             {loading ? 'Processing...' : (isLogin ? 'Sign In' : 'Create Account')}
           </button>
