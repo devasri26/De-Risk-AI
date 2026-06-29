@@ -3741,3 +3741,66 @@ transform: translateY(30px);
   mask-image: radial-gradient(circle 350px at var(--mouse-x, 50%) var(--mouse-y, 50%), black 10%, rgba(0, 0, 0, 0.15) 50%, transparent 100%);
   -webkit-mask-image: radial-gradient(circle 350px at var(--mouse-x, 50%) var(--mouse-y, 50%), black 10%, rgba(0, 0, 0, 0.15) 50%, transparent 100%);
 }
+
+/* Custom Table Layout overrides for dynamic mitigation-grid */
+.mitigation-grid {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+  overflow: hidden;
+  margin-top: 1rem;
+}
+
+.mitigation-item {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-dim);
+  padding: 1.25rem 1.5rem;
+  gap: 2.5rem;
+}
+
+.mitigation-item:last-child {
+  border-bottom: none;
+}
+
+.mitigation-challenge, .mitigation-solution {
+  flex: 1;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.mitigation-challenge p {
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.mitigation-solution p {
+  color: var(--text-bright);
+  margin: 0;
+}
+
+.mitigation-arrow {
+  display: none !important;
+}
+
+.mitigation-tag {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--rose-color);
+  margin-bottom: 0.35rem;
+  letter-spacing: 0.05em;
+}
+
+.mitigation-tag.solution-tag {
+  color: var(--emerald-color);
+}
