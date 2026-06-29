@@ -4,6 +4,43 @@ import AnalysisResult from './components/AnalysisResult';
 import Auth from './components/Auth';
 import { analyzeProject } from './services/api';
 
+function StepLoader() {
+  const [step, setStep] = React.useState(0);
+  const steps = [
+    "Analyzing project scope and architecture...",
+    "Evaluating database scaling parameters...",
+    "Checking technical integration triggers...",
+    "Mapping mitigation matrices and SWOT grids...",
+    "Computing budget and timeline heuristics..."
+  ];
+
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setStep((prev) => (prev < steps.length - 1 ? prev + 1 : prev));
+    }, 1200);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="glass-card loader-wrapper" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '3.5rem 2rem' }}>
+      <div className="spinner-ring" />
+      <h3 className="loader-text" style={{ fontSize: '1.25rem', fontWeight: 700, margin: '1rem 0 0.5rem 0' }}>Concept Feasibility Audit</h3>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', marginTop: '1.5rem', maxWidth: '340px', width: '100%' }}>
+        {steps.map((text, idx) => {
+          const isDone = idx < step;
+          const isActive = idx === step;
+          return (
+            <div key={idx} style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', fontSize: '0.85rem', color: isDone ? 'var(--emerald-color)' : (isActive ? 'var(--text-bright)' : 'var(--text-muted)'), opacity: isDone ? 0.7 : (isActive ? 1 : 0.4), transition: 'all 0.25s ease', textAlign: 'left' }}>
+              <span style={{ fontWeight: 800 }}>{isDone ? '✓' : (isActive ? '●' : '○')}</span>
+              <span style={{ fontWeight: isActive ? '600' : 'normal' }}>{text}</span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState(null);
@@ -116,15 +153,7 @@ export default function App() {
             )}
 
             {/* Loading Spinner Panel */}
-            {isAnalyzing && (
-              <div className="glass-card loader-wrapper">
-                <div className="spinner-ring" />
-                <h3 className="loader-text">Analyzing Concept</h3>
-                <p className="loader-sub">
-                  Connecting with Google Gemini nodes to identify failure triggers, data bottlenecks, and compute limitations...
-                </p>
-              </div>
-            )}
+            {isAnalyzing && <StepLoader />}
 
             {/* Input Form Section */}
             {!analysisResult && !isAnalyzing && (

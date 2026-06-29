@@ -789,7 +789,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-primary:active {
-  transform: translateY(0);
+  transform: translateY(0) scale(0.98);
 }
 
 .btn-primary:disabled {
@@ -1039,7 +1039,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 .loader-step.active .step-indicator {
   border-color: var(--primary-color);
-  box-shadow: 0 0 10px var(--primary-glow);
+  box-shadow: none;
 }
 .loader-step.active .step-indicator-dot {
   background: var(--primary-color);

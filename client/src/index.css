@@ -246,7 +246,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-primary:active {
-  transform: translateY(0);
+  transform: translateY(0) scale(0.98);
 }
 
 .btn-primary:disabled {
@@ -291,8 +291,8 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Error Banner styling */
 .error-box {
-  background: hsla(346, 84%, 61%, 0.1);
-  border: 1px solid hsla(346, 84%, 61%, 0.3);
+  background: var(--rose-glow);
+  border: 1px solid rgba(239, 68, 68, 0.3);
   border-radius: var(--radius-md);
   padding: 1.25rem;
   margin-bottom: 2rem;
@@ -364,13 +364,18 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  transition: var(--transition-fast);
+  transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
 }
 
 .btn-outline:hover {
   color: var(--text-bright);
-  background: hsla(222, 47%, 16%, 0.6);
-  border-color: var(--text-muted);
+  background: var(--bg-card-hover);
+  border-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+}
+
+.btn-outline:active {
+  transform: translateY(0) scale(0.98);
 }
 
 /* Score Panel + Summary details grid */
@@ -469,7 +474,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .info-list-item {
-  background: hsla(222, 47%, 4%, 0.35);
+  background: var(--bg-input);
   border: 1px solid var(--border-dim);
   border-radius: var(--radius-md);
   padding: 0.85rem 1.1rem;
@@ -493,7 +498,7 @@ h1, h2, h3, h4, h5, h6 {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  border: 1px solid hsla(346, 84%, 61%, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.2);
 }
 
 /* Risks Grid system */
