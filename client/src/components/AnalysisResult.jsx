@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 export default function AnalysisResult({ result, onReset }) {
   if (!result) return null;
@@ -18,9 +18,18 @@ export default function AnalysisResult({ result, onReset }) {
     marketRisk = 50,
     scalabilityRisk = 50,
     operationalRisk = 50,
-    roadmap = []
+    roadmap = [],
+    swot = { strengths: [], weaknesses: [], opportunities: [], threats: [] },
+    estimates = { 
+      estimatedBudget: "₹4–6 Lakhs", 
+      estimatedDuration: "4–6 Months", 
+      recommendedTeamSize: "5 Developers", 
+      complexityLevel: "Medium", 
+      estimatedMaintenanceCost: "₹40K / Month" 
+    }
   } = result;
-  const [simulation, setSimulation] = React.useState({
+
+  const [simulation, setSimulation] = useState({
     budget: false,
     team: false,
     timeline: false,
@@ -28,7 +37,7 @@ export default function AnalysisResult({ result, onReset }) {
     infra: false
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     setSimulation({
       budget: false,
       team: false,
@@ -38,7 +47,6 @@ export default function AnalysisResult({ result, onReset }) {
     });
   }, [result]);
   
-  // Resolve both confidenceScore and the typo field confidsenceScore defensively
   const confidenceScore = result.confidenceScore !== undefined 
     ? result.confidenceScore 
     : (result.confidsenceScore !== undefined ? result.confidsenceScore : 50);
@@ -75,14 +83,15 @@ export default function AnalysisResult({ result, onReset }) {
 
   const baseRiskLevel = getRiskLevelName(riskBase);
   const simRiskLevel = getRiskLevelName(riskSim);
-
   const baseInvVerdict = getInvestorVerdictName(investorBase);
   const simInvVerdict = getInvestorVerdictName(investorSim);
 
-  const simChartRef = React.useRef(null);
-  const simChartInstanceRef = React.useRef(null);
+  const simChartRef = useRef(null);
+  const simChartInstanceRef = useRef(null);
+  const chartRef = useRef(null);
+  const chartInstanceRef = useRef(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (simChartRef.current) {
       if (simChartInstanceRef.current) {
         simChartInstanceRef.current.destroy();
@@ -119,38 +128,20 @@ export default function AnalysisResult({ result, onReset }) {
               legend: {
                 labels: {
                   color: 'var(--text-muted)',
-                  font: {
-                    family: "'Outfit', sans-serif"
-                  }
+                  font: { family: "'Outfit', sans-serif" }
                 }
               }
             },
             scales: {
               x: {
-                grid: {
-                  color: 'rgba(255, 255, 255, 0.05)'
-                },
-                ticks: {
-                  color: 'rgba(255, 255, 255, 0.4)',
-                  font: {
-                    size: 10
-                  }
-                },
+                grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                ticks: { color: 'rgba(255, 255, 255, 0.4)', font: { size: 10 } },
                 min: 0,
                 max: 100
               },
               y: {
-                grid: {
-                  display: false
-                },
-                ticks: {
-                  color: 'var(--text-muted)',
-                  font: {
-                    family: "'Outfit', sans-serif",
-                    size: 10,
-                    weight: '600'
-                  }
-                }
+                grid: { display: false },
+                ticks: { color: 'var(--text-muted)', font: { family: "'Outfit', sans-serif", size: 10, weight: '600' } }
               }
             }
           }
@@ -164,16 +155,7 @@ export default function AnalysisResult({ result, onReset }) {
     };
   }, [successSim, riskSim, investorSim, successBase, riskBase, investorBase]);
 
-  // SVG parameters
-  const radius = 50;
-  const circumference = 2 * Math.PI * radius;
-  const strokeOffset = circumference - (circumference * confidenceScore) / 100;
-
-  // Choose colors based on confidence level
-  const chartRef = React.useRef(null);
-  const chartInstanceRef = React.useRef(null);
-
-  React.useEffect(() => {
+  useEffect(() => {
     if (chartRef.current) {
       if (chartInstanceRef.current) {
         chartInstanceRef.current.destroy();
@@ -200,36 +182,13 @@ export default function AnalysisResult({ result, onReset }) {
           options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: {
-              legend: {
-                display: false
-              }
-            },
+            plugins: { legend: { display: false } },
             scales: {
               r: {
-                angleLines: {
-                  color: 'rgba(255, 255, 255, 0.08)'
-                },
-                grid: {
-                  color: 'rgba(255, 255, 255, 0.08)'
-                },
-                pointLabels: {
-                  color: '#9ca3af',
-                  font: {
-                    family: "'Outfit', sans-serif",
-                    size: 10,
-                    weight: '600'
-                  }
-                },
-                ticks: {
-                  backdropColor: 'transparent',
-                  color: 'rgba(255, 255, 255, 0.3)',
-                  showLabelBackdrop: false,
-                  font: {
-                    size: 8
-                  },
-                  stepSize: 20
-                },
+                angleLines: { color: 'rgba(255, 255, 255, 0.08)' },
+                grid: { color: 'rgba(255, 255, 255, 0.08)' },
+                pointLabels: { color: '#9ca3af', font: { family: "'Outfit', sans-serif", size: 10, weight: '600' } },
+                ticks: { backdropColor: 'transparent', color: 'rgba(255, 255, 255, 0.3)', showLabelBackdrop: false, font: { size: 8 }, stepSize: 20 },
                 min: 0,
                 max: 100
               }
@@ -249,411 +208,251 @@ export default function AnalysisResult({ result, onReset }) {
     if (score >= 75) {
       return {
         textClass: 'text-emerald',
-        stroke: 'var(--emerald-color)',
+        stroke: '#22C55E',
         badgeClass: 'badge-emerald',
         label: 'Highly Feasible'
       };
     } else if (score >= 50) {
       return {
         textClass: 'text-amber',
-        stroke: 'var(--amber-color)',
+        stroke: '#F59E0B',
         badgeClass: 'badge-amber',
-        label: 'Moderate Risk'
+        label: 'Conditionally Feasible'
       };
     } else {
       return {
         textClass: 'text-rose',
-        stroke: 'var(--rose-color)',
+        stroke: '#EF4444',
         badgeClass: 'badge-rose',
-        label: 'High Risk'
+        label: 'High Conceptual Risk'
       };
     }
   };
 
   const theme = getTheme(confidenceScore);
 
-  const getSeverityBadgeClass = (severity) => {
-    const s = (severity || 'medium').toLowerCase();
-    if (s === 'high') return 'badge-rose';
-    if (s === 'low') return 'badge-emerald';
-    return 'badge-amber';
-  };
-
   return (
-    <div className="animate-slide-up" style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+    <div className="animate-slide-up" style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem', width: '100%' }}>
       
-      {/* Result Top Action Header */}
-      <div className="result-header">
-        <div className="result-title-section">
-          <span>Diagnostic Assessment</span>
-          <h2>Audit Diagnostic Report</h2>
+      {/* Consulting Report Header */}
+      <div style={{ borderBottom: '1px solid var(--border-dim)', paddingBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1.5rem' }}>
+        <div>
+          <span style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--primary-color)', fontWeight: 700 }}>
+            Enterprise Concept Diagnostic Audit
+          </span>
+          <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--text-bright)', marginTop: '0.25rem' }}>Feasibility Report</h2>
         </div>
-        <button className="btn-outline" onClick={onReset}>
-          ← Analyze New Idea
+        <button className="btn-outline" onClick={onReset} style={{ padding: '0.5rem 1rem' }}>
+          ← Back to Workspace
         </button>
       </div>
 
-      {/* Grid: Gauge Circle + Failure Causes list */}
-      <div className="diagnostics-row">
+      {/* Estimator High-Density Statistics Metadata Row */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem' }}>
+        {[
+          { label: "Estimated Budget", value: estimates.estimatedBudget, desc: "Development cost", color: "var(--text-bright)" },
+          { label: "Timeline Duration", value: estimates.estimatedDuration, desc: "Expected runway", color: "var(--text-bright)" },
+          { label: "Team Size", value: estimates.recommendedTeamSize, desc: "Staffing footprint", color: "var(--text-bright)" },
+          { label: "Complexity Level", value: estimates.complexityLevel, desc: "System execution", color: estimates.complexityLevel === "High" ? "var(--rose-color)" : estimates.complexityLevel === "Medium" ? "var(--amber-color)" : "var(--emerald-color)" },
+          { label: "Maintenance Cost", value: estimates.estimatedMaintenanceCost, desc: "Monthly operational", color: "var(--text-bright)" }
+        ].map((item, idx) => (
+          <div key={idx} style={{ background: 'var(--bg-card)', border: '1px solid var(--border-dim)', borderRadius: 'var(--radius-md)', padding: '1rem 1.25rem', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+            <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>{item.label}</span>
+            <span style={{ fontSize: '1.25rem', fontWeight: 800, color: item.color }}>{item.value}</span>
+            <span style={{ fontSize: '0.7rem', color: 'var(--text-dim)' }}>{item.desc}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Structured Document Workspace Columns */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', alignItems: 'start' }}>
         
-        {/* SVG circular gauge */}
-        <div className="glass-card gauge-panel">
-          <h3 className="card-subtitle" style={{ marginBottom: '1.25rem' }}>Feasibility Confidence</h3>
+        {/* Left Document Column */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
           
-          <div className="svg-container">
-            <svg className="svg-circle-bg" style={{ transform: 'rotate(-90deg)', width: '100%', height: '100%', viewBox: '0 0 120 120' }}>
-              {/* Background trace */}
-              <circle cx="60" cy="60" r={radius} />
-              {/* Active trace */}
-              <circle
-                className="svg-circle-fill"
-                cx="60"
-                cy="60"
-                r={radius}
-                stroke={theme.stroke}
-                strokeDasharray={circumference}
-                strokeDashoffset={strokeOffset}
-              />
-            </svg>
-            <div className="svg-score-label">
-              <span className={`score-number ${theme.textClass}`}>{confidenceScore}%</span>
-              <span className="score-text">Rating</span>
+          {/* Executive Summary & Confidence Score */}
+          <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-dim)', borderRadius: 'var(--radius-lg)', padding: '2rem', display: 'flex', gap: '2rem', alignItems: 'center' }}>
+            <div style={{ position: 'relative', width: '100px', height: '100px', display: 'flex', alignItems: 'center', justifycontent: 'center', flexShrink: 0 }}>
+              <svg style={{ transform: 'rotate(-90deg)', width: '100px', height: '100px' }}>
+                <circle cx="50" cy="50" r="42" fill="none" stroke="#111111" strokeWidth="6" />
+                <circle cx="50" cy="50" r="42" fill="none" stroke={theme.stroke} strokeWidth="6" strokeDasharray={2 * Math.PI * 42} strokeDashoffset={2 * Math.PI * 42 - (2 * Math.PI * 42 * confidenceScore) / 100} strokeLinecap="round" />
+              </svg>
+              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.4rem', fontWeight: 800, color: theme.stroke }}>
+                {confidenceScore}%
+              </div>
+            </div>
+            <div>
+              <span className={`badge-pill ${theme.badgeClass}`} style={{ display: 'inline-block', fontSize: '0.7rem', textTransform: 'uppercase', padding: '0.2rem 0.6rem', borderRadius: '4px', fontWeight: 800 }}>
+                {theme.label}
+              </span>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '0.5rem', lineHeight: '1.5' }}>
+                The diagnostic engine computes a {confidenceScore}% confidence score based on resource allocations, concurrency models, and architecture design rules.
+              </p>
             </div>
           </div>
 
-          <div className={`badge-pill ${theme.badgeClass}`}>
-            {theme.label}
+          {/* Failure Reasons list */}
+          <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-dim)', borderRadius: 'var(--radius-lg)', padding: '2rem' }}>
+            <h3 style={{ fontSize: '1rem', fontWeight: 700, borderBottom: '1px solid var(--border-dim)', paddingBottom: '0.75rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <span>⚠️</span> Potential Failure Drivers
+            </h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+              {failureReasons && failureReasons.map((reason, idx) => (
+                <div key={idx} style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start', fontSize: '0.85rem', color: 'var(--text-muted)', lineHeight: '1.5' }}>
+                  <span style={{ color: 'var(--rose-color)', fontWeight: 800 }}>0{idx + 1}</span>
+                  <span>{reason}</span>
+                </div>
+              ))}
+            </div>
           </div>
+
         </div>
 
-        {/* Failure Causes Card */}
-        <div className="glass-card info-list-panel">
-          <h3 className="info-list-title">
-            ⚠️ Failure Causes
+        {/* Right Document Column: Radar Chart */}
+        <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-dim)', borderRadius: 'var(--radius-lg)', padding: '2rem', height: '100%', display: 'flex', flexDirection: 'column' }}>
+          <h3 style={{ fontSize: '1rem', fontWeight: 700, borderBottom: '1px solid var(--border-dim)', paddingBottom: '0.75rem', marginBottom: '1.5rem' }}>
+            Risk Profiler Vectors
           </h3>
-          <p className="card-text" style={{ marginBottom: '0.5rem' }}>
-            Historical audits map these factors as primary risk drivers for similar architectures:
-          </p>
-          {failureReasons && failureReasons.length > 0 ? (
-            failureReasons.map((reason, idx) => (
-              <div key={idx} className="info-list-item">
-                <span className="info-list-bullet">{idx + 1}</span>
-                <span>{reason}</span>
-              </div>
-            ))
-          ) : (
-            <p className="card-text">No distinct failure triggers isolated.</p>
-          )}
+          <div style={{ flex: 1, minHeight: '260px', position: 'relative' }}>
+            <canvas ref={chartRef}></canvas>
+          </div>
         </div>
 
       </div>
 
-      {/* Investor Readiness Score Card */}
-      <div className="glass-card animate-slide-up" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-        <div style={{ borderBottom: '1px dashed var(--border-dim)', paddingBottom: '1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-          <div>
-            <span style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--text-muted)', fontWeight: 600 }}>Overall Assessment</span>
-            <h3 style={{ fontSize: '1.4rem', fontWeight: 800, marginTop: '0.2rem' }}>Investor Readiness</h3>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div style={{ fontSize: '2rem', fontWeight: 800 }} className={
-              investorReadinessScore >= 80 ? 'text-emerald' : (investorReadinessScore >= 60 ? 'text-amber' : 'text-rose')
-            }>
-              {investorReadinessScore}/100
+      {/* SWOT Analysis 2x2 Grid Section */}
+      <div>
+        <h3 style={{ fontSize: '1.15rem', fontWeight: 800, marginBottom: '1rem', color: 'var(--text-bright)' }}>Strategic SWOT Matrix</h3>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+          {[
+            { label: "Strengths", items: swot.strengths, icon: "🛡️", color: "var(--emerald-color)" },
+            { label: "Weaknesses", items: swot.weaknesses, icon: "⚠️", color: "var(--rose-color)" },
+            { label: "Opportunities", items: swot.opportunities, icon: "💡", color: "var(--primary-color)" },
+            { label: "Threats", items: swot.threats, icon: "⚡", color: "var(--amber-color)" }
+          ].map((cat, idx) => (
+            <div key={idx} style={{ background: 'var(--bg-card)', border: '1px solid var(--border-dim)', borderRadius: 'var(--radius-lg)', padding: '1.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', borderBottom: '1px solid var(--border-dim)', paddingBottom: '0.5rem' }}>
+                <span style={{ fontSize: '1.1rem' }}>{cat.icon}</span>
+                <span style={{ fontSize: '0.9rem', fontWeight: 800, color: cat.color }}>{cat.label}</span>
+              </div>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                {cat.items && cat.items.map((bullet, bIdx) => (
+                  <li key={bIdx} style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-start', fontSize: '0.82rem', color: 'var(--text-muted)', lineHeight: '1.4' }}>
+                    <span style={{ color: cat.color }}>•</span>
+                    <span>{bullet}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
-            <span className={`badge-pill ${
-              investorReadinessScore >= 80 ? 'badge-emerald' : (investorReadinessScore >= 60 ? 'badge-amber' : 'badge-rose')
-            }`} style={{ padding: '6px 14px', fontSize: '0.8rem', fontWeight: 700 }}>
-              {investorReadinessScore >= 80 ? 'Investor Ready' : (investorReadinessScore >= 60 ? 'Needs Improvement' : 'High Risk Investment')}
-            </span>
-          </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Scenario What-If Simulator comparative displays */}
+      <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-dim)', borderRadius: 'var(--radius-lg)', padding: '2rem' }}>
+        <h3 style={{ fontSize: '1rem', fontWeight: 700, borderBottom: '1px solid var(--border-dim)', paddingBottom: '0.75rem', marginBottom: '1.25rem' }}>
+          What-If Scenario Simulator
+        </h3>
+        
+        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
+          {[
+            { key: "budget", label: "+20% Budget", icon: "💰" },
+            { key: "team", label: "+Staffing", icon: "👥" },
+            { key: "timeline", label: "-Timeline", icon: "⏱️" },
+            { key: "marketing", label: "+Marketing", icon: "📈" },
+            { key: "infra", label: "+Infra scale", icon: "☁️" }
+          ].map((item) => (
+            <button 
+              key={item.key}
+              onClick={() => setSimulation(prev => ({ ...prev, [item.key]: !prev[item.key] }))}
+              style={{
+                background: simulation[item.key] ? 'var(--primary-glow)' : 'transparent',
+                border: `1px solid ${simulation[item.key] ? 'var(--primary-color)' : 'var(--border-dim)'}`,
+                color: simulation[item.key] ? 'var(--primary-color)' : 'var(--text-muted)',
+                padding: '0.4rem 0.8rem',
+                borderRadius: 'var(--radius-sm)',
+                fontSize: '0.78rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.35rem',
+                transition: 'all 0.15s ease'
+              }}
+            >
+              <span>{item.icon}</span>
+              <span>{item.label}</span>
+            </button>
+          ))}
         </div>
 
-        <div className="cards-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.25rem' }}>
-          {[
-            { label: 'Market Potential', score: marketPotentialScore },
-            { label: 'Scalability', score: scalabilityScore },
-            { label: 'Revenue Model', score: revenueModelScore },
-            { label: 'Execution Feasibility', score: executionFeasibilityScore }
-          ].map((item, idx) => {
-            let color = 'var(--rose-color)';
-            if (item.score >= 80) color = 'var(--emerald-color)';
-            else if (item.score >= 60) color = 'var(--amber-color)';
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: '2rem', alignItems: 'center' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}>
+              <span style={{ color: 'var(--text-muted)' }}>Success Probability:</span>
+              <span style={{ color: successSim >= successBase ? 'var(--emerald-color)' : 'var(--rose-color)', fontWeight: 'bold' }}>
+                {successBase}% → {successSim}%
+              </span>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}>
+              <span style={{ color: 'var(--text-muted)' }}>Risk Score & Level:</span>
+              <span style={{ color: riskSim <= riskBase ? 'var(--emerald-color)' : 'var(--rose-color)', fontWeight: 'bold' }}>
+                {riskBase}% ({baseRiskLevel}) → {riskSim}% ({simRiskLevel})
+              </span>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}>
+              <span style={{ color: 'var(--text-muted)' }}>Investor Readiness:</span>
+              <span style={{ color: investorSim >= investorBase ? 'var(--emerald-color)' : 'var(--rose-color)', fontWeight: 'bold' }}>
+                {investorBase}/100 → {investorSim}/100
+              </span>
+            </div>
+          </div>
+          
+          <div style={{ height: '180px', position: 'relative' }}>
+            <canvas ref={simChartRef}></canvas>
+          </div>
+        </div>
+      </div>
 
+      {/* Risks details */}
+      <div>
+        <h3 style={{ fontSize: '1.15rem', fontWeight: 800, marginBottom: '1rem', color: 'var(--text-bright)' }}>Isolated System Risk Log</h3>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem' }}>
+          {risks && risks.map((riskObj, idx) => {
+            const severityColor = riskObj.severity === "HIGH" ? "var(--rose-color)" : riskObj.severity === "MEDIUM" ? "var(--amber-color)" : "var(--emerald-color)";
             return (
-              <div key={idx} className="glass-card" style={{ padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.75rem', background: 'rgba(255, 255, 255, 0.02)', margin: 0 }}>
-                <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)', fontWeight: 600 }}>{item.label}</span>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-                  <span style={{ fontSize: '1.6rem', fontWeight: 800 }} className={item.score >= 80 ? 'text-emerald' : (item.score >= 60 ? 'text-amber' : 'text-rose')}>
-                    {item.score}%
-                  </span>
+              <div key={idx} style={{ background: 'var(--bg-card)', border: '1px solid var(--border-dim)', borderRadius: 'var(--radius-lg)', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <h4 style={{ fontSize: '0.88rem', fontWeight: 800, color: 'var(--text-bright)' }}>{riskObj.risk}</h4>
+                  <span style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${severityColor}`, color: severityColor, padding: '2px 8px', borderRadius: '4px', fontSize: '0.65rem', fontWeight: 800 }}>{riskObj.severity}</span>
                 </div>
-                <div style={{ height: '6px', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '3px', overflow: 'hidden' }}>
-                  <div style={{ width: `${item.score}%`, height: '100%', background: color, borderRadius: '3px', transition: 'width 1s ease' }} />
-                </div>
+                <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', lineHeight: '1.4' }}>{riskObj.description}</p>
               </div>
             );
           })}
         </div>
       </div>
 
-      {/* Project Risk Heatmap Section */}
+      {/* Match Table Layout: Challenges and Solutions */}
       <div>
-        <h3 className="section-title">Project Risk Heatmap</h3>
-        <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', marginTop: '1rem' }}>
-          
-          {/* Heatmap cards */}
-          <div className="glass-card" style={{ flex: '1.2', display: 'flex', flexDirection: 'column', gap: '0.85rem', padding: '1.5rem', minWidth: '320px', margin: 0 }}>
-            <h4 style={{ margin: '0 0 0.5rem 0', fontSize: '1rem', fontWeight: 700, color: 'var(--text-bright)' }}>Risk Vectors & Severity</h4>
-            {[
-              { name: "Technical Risk", score: technicalRisk },
-              { name: "Budget Risk", score: budgetRisk },
-              { name: "Market Risk", score: marketRisk },
-              { name: "Scalability Risk", score: scalabilityRisk },
-              { name: "Operational Risk", score: operationalRisk }
-            ].map((item, idx) => {
-              let level = "Low";
-              let bg = "rgba(16, 185, 129, 0.05)";
-              let border = "rgba(16, 185, 129, 0.2)";
-              let textClass = "text-emerald";
-              let barColor = "var(--emerald-color)";
-              
-              if (item.score >= 70) {
-                level = "High";
-                bg = "rgba(244, 63, 94, 0.07)";
-                border = "rgba(244, 63, 94, 0.25)";
-                textClass = "text-rose";
-                barColor = "var(--rose-color)";
-              } else if (item.score >= 40) {
-                level = "Medium";
-                bg = "rgba(217, 119, 6, 0.07)";
-                border = "rgba(217, 119, 6, 0.25)";
-                textClass = "text-amber";
-                barColor = "var(--amber-color)";
-              }
-
-              return (
-                <div key={idx} className="glass-card" style={{ background: bg, borderColor: border, padding: '0.75rem 1.25rem', margin: 0, display: 'flex', flexDirection: 'column', gap: '0.5rem', boxShadow: 'inset 0 1px 1px rgba(255, 255, 255, 0.01)' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-                    <span style={{ fontWeight: 700, fontSize: '0.88rem', color: 'var(--text-bright)' }}>{item.name}</span>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                      <span className={`badge-pill ${level === 'High' ? 'badge-rose' : (level === 'Medium' ? 'badge-amber' : 'badge-emerald')}`} style={{ padding: '2px 8px', fontSize: '0.65rem', borderRadius: '4px' }}>{level}</span>
-                      <span className={textClass} style={{ fontWeight: 800, fontSize: '0.95rem' }}>{item.score}%</span>
-                    </div>
-                  </div>
-                  <div style={{ height: '5px', background: 'rgba(255, 255, 255, 0.04)', borderRadius: '3px', overflow: 'hidden', width: '100%' }}>
-                    <div style={{ width: `${item.score}%`, height: '100%', background: barColor, borderRadius: '3px', transition: 'width 1.2s ease' }} />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Radar Chart */}
-          <div className="glass-card" style={{ flex: '1', display: 'flex', flexDirection: 'column', alignSelf: 'stretch', alignItems: 'center', justifyContent: 'center', padding: '1.5rem', minWidth: '300px', minHeight: '320px', margin: 0 }}>
-            <h4 style={{ margin: '0 0 1.5rem 0', alignSelf: 'flex-start', fontSize: '1rem', fontWeight: 700, color: 'var(--text-bright)' }}>Risk Profiler Visualization</h4>
-            <div style={{ width: '100%', height: '260px', position: 'relative' }}>
-              <canvas ref={chartRef}></canvas>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      {/* AI Implementation Roadmap Section */}
-      <div>
-        <h3 className="section-title">AI Implementation Roadmap</h3>
-        <div className="glass-card" style={{ marginTop: '1rem', padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1.5rem', margin: 0 }}>
-          <h4 style={{ margin: 0, fontSize: '1rem', fontWeight: 700, color: 'var(--text-bright)' }}>Execution Phases & Timeline</h4>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', position: 'relative', borderLeft: '2px dashed rgba(255, 255, 255, 0.1)', marginLeft: '1.5rem', paddingLeft: '2.25rem' }}>
-            {roadmap.length === 0 ? (
-              <p className="card-text">No implementation roadmap generated for this concept.</p>
-            ) : (
-              roadmap.map((phaseData, index) => {
-                const nodeColor = `hsl(${(index * 55) % 360}, 75%, 55%)`;
-                const nodeGlow = `hsla(${(index * 55) % 360}, 75%, 55%, 0.15)`;
-                
-                return (
-                  <div key={index} className="animate-slide-up" style={{ position: 'relative' }}>
-                    {/* Circle Node circle */}
-                    <div style={{ position: 'absolute', left: '-3.05rem', top: 0, width: '1.6rem', height: '1.6rem', background: '#0f172a', border: `2.5px solid ${nodeColor}`, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 800, color: '#ffffff', boxShadow: `0 0 10px ${nodeGlow}`, zIndex: 2 }}>
-                      {index + 1}
-                    </div>
-
-                    {/* Content Card */}
-                    <div className="glass-card" style={{ padding: '1.25rem', margin: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem', background: 'rgba(255, 255, 255, 0.01)' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem', width: '100%' }}>
-                        <h5 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 800, color: 'var(--text-bright)' }}>{phaseData.phase}</h5>
-                        <span className="badge-pill" style={{ background: 'rgba(255, 255, 255, 0.03)', borderColor: 'rgba(255, 255, 255, 0.08)', color: 'var(--text-muted)', padding: '2px 10px', fontSize: '0.7rem', borderRadius: '4px' }}>Duration: {phaseData.duration}</span>
-                      </div>
-                      <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                        {Array.isArray(phaseData.tasks) && phaseData.tasks.map((task, tIdx) => (
-                          <li key={tIdx} style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start', color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: 1.5, marginBottom: '0.5rem' }}>
-                            <span style={{ color: nodeColor, fontWeight: 'bold', fontSize: '1.1rem', lineHeight: 1 }}>•</span>
-                            <span>{task}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                );
-              })
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Scenario What-If Simulator Section */}
-      <div>
-        <h3 className="section-title">Scenario What-If Simulator</h3>
-        <div className="glass-card" style={{ marginTop: '1rem', padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2rem', margin: 0 }}>
-          <h4 style={{ margin: 0, fontSize: '1rem', fontWeight: 700, color: 'var(--text-bright)' }}>Model Alternative Decision Paths</h4>
-          
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem' }}>
-            {[
-              { key: "budget", label: "Increase Budget by 20%", icon: "💰" },
-              { key: "team", label: "Increase Team Size", icon: "👥" },
-              { key: "timeline", label: "Reduce Timeline", icon: "⏱️" },
-              { key: "marketing", label: "Increase Marketing", icon: "📈" },
-              { key: "infra", label: "Improve Infrastructure", icon: "☁️" }
-            ].map((item) => (
-              <div 
-                key={item.key}
-                className="glass-card"
-                style={{
-                  padding: '1rem',
-                  margin: 0,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '0.5rem',
-                  cursor: 'pointer',
-                  textAlign: 'center',
-                  transition: 'all 0.25s ease',
-                  background: simulation[item.key] ? 'rgba(99, 102, 241, 0.1)' : 'rgba(255, 255, 255, 0.01)',
-                  borderColor: simulation[item.key] ? 'var(--primary-color)' : 'var(--border-dim)'
-                }}
-                onClick={() => setSimulation(prev => ({ ...prev, [item.key]: !prev[item.key] }))}
-              >
-                <span style={{ fontSize: '1.5rem' }}>{item.icon}</span>
-                <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-bright)' }}>{item.label}</span>
-              </div>
-            ))}
-          </div>
-
-          <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap', marginTop: '1rem' }}>
-            {/* Left comparative display */}
-            <div className="glass-card" style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '1.25rem', padding: '1.5rem', minWidth: '280px', margin: 0, background: 'var(--card-bg)' }}>
-              <h5 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 800, color: 'var(--text-bright)' }}>Alternative Projection</h5>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                
-                {/* Success Probability */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 600 }}>
-                    <span>Success Probability</span>
-                    <span style={{ color: successSim >= successBase ? 'var(--emerald-color)' : 'var(--rose-color)', fontWeight: 'bold' }}>
-                      {successSim >= successBase ? '+' : ''}{successSim - successBase}%
-                    </span>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginTop: '0.25rem' }}>
-                    <span style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-muted)' }}>{successBase}%</span>
-                    <span style={{ color: 'var(--text-muted)', fontWeight: 'bold' }}>→</span>
-                    <span style={{ fontSize: '1.5rem', fontWeight: 800, color: successSim >= 75 ? 'var(--emerald-color)' : (successSim >= 50 ? 'var(--amber-color)' : 'var(--rose-color)') }}>{successSim}%</span>
-                  </div>
-                </div>
-
-                {/* Risk Score */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', borderTop: '1px solid rgba(255, 255, 255, 0.05)', paddingTop: '0.75rem' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 600 }}>
-                    <span>Risk Score & Level</span>
-                    <span style={{ color: riskSim <= riskBase ? 'var(--emerald-color)' : 'var(--rose-color)', fontWeight: 'bold' }}>
-                      {riskSim >= riskBase ? '+' : ''}{riskSim - riskBase}%
-                    </span>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginTop: '0.25rem' }}>
-                    <span style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-muted)' }}>{riskBase}% ({baseRiskLevel})</span>
-                    <span style={{ color: 'var(--text-muted)', fontWeight: 'bold' }}>→</span>
-                    <span style={{ fontSize: '1.5rem', fontWeight: 800, color: riskSim >= 50 ? 'var(--rose-color)' : (riskSim >= 25 ? 'var(--amber-color)' : 'var(--emerald-color)') }}>{riskSim}% ({simRiskLevel})</span>
-                  </div>
-                </div>
-
-                {/* Investor Readiness */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', borderTop: '1px solid rgba(255, 255, 255, 0.05)', paddingTop: '0.75rem' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 600 }}>
-                    <span>Investor Readiness</span>
-                    <span style={{ color: investorSim >= investorBase ? 'var(--emerald-color)' : 'var(--rose-color)', fontWeight: 'bold' }}>
-                      {investorSim >= investorBase ? '+' : ''}{investorSim - investorBase}%
-                    </span>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginTop: '0.25rem' }}>
-                    <span style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-muted)' }}>{investorBase}/100 ({baseInvVerdict})</span>
-                    <span style={{ color: 'var(--text-muted)', fontWeight: 'bold' }}>→</span>
-                    <span style={{ fontSize: '1.5rem', fontWeight: 800, color: investorSim >= 80 ? 'var(--emerald-color)' : (investorSim >= 60 ? 'var(--amber-color)' : 'var(--rose-color)') }}>{investorSim}/100 ({simInvVerdict})</span>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-
-            {/* Right chart */}
-            <div className="glass-card" style={{ flex: 1.2, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '1.5rem', minWidth: '300px', minHeight: '280px', margin: 0 }}>
-              <h5 style={{ margin: '0 0 1rem 0', alignSelf: 'flex-start', fontSize: '0.95rem', fontWeight: 800, color: 'var(--text-bright)' }}>Projection Chart</h5>
-              <div style={{ width: '100%', height: '200px', position: 'relative' }}>
-                <canvas ref={simChartRef}></canvas>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      {/* Risks breakdown cards */}
-      <div>
-        <h3 className="section-title">Isolated System Risks</h3>
-        <div className="cards-grid">
-          {risks && risks.map((riskObj, idx) => (
-            <div key={idx} className="glass-card risk-card">
-              <div className="card-header-flex">
-                <h4 className="card-subtitle">{riskObj.risk}</h4>
-                <span className={`badge-pill ${getSeverityBadgeClass(riskObj.severity)}`} style={{ padding: '2px 10px', fontSize: '0.7rem' }}>
-                  {riskObj.severity}
-                </span>
-              </div>
-              <p className="card-text">{riskObj.description}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Match Layout: Challenges and Solutions side-by-side */}
-      <div>
-        <h3 className="section-title">Challenges & Solutions</h3>
-        <div className="match-layout">
-          
-          <div className="match-thead">
-            <div className="match-th-cell"> ब्लॉकर्स (Blockers) / Challenge</div>
-            <div className="match-th-cell">शमन (Mitigation) / Actionable Solution</div>
-          </div>
-
-          <div>
-            {solutions && solutions.map((solPair, idx) => (
-              <div key={idx} className="match-trow">
-                
-                {/* Challenge column */}
-                <div className="match-td-cell">
-                  {solPair.challenge}
-                </div>
-
-                {/* Solution column */}
-                <div className="match-td-cell">
-                  {solPair.solution}
-                </div>
-
-              </div>
-            ))}
-          </div>
-
+        <h3 style={{ fontSize: '1.15rem', fontWeight: 800, marginBottom: '1rem', color: 'var(--text-bright)' }}>Actionable Mitigation Matrix</h3>
+        <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-dim)', borderRadius: 'var(--radius-lg)', overflow: 'hidden' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem', textAlign: 'left' }}>
+            <thead>
+              <tr style={{ background: 'rgba(255,255,255,0.02)', borderBottom: '1px solid var(--border-dim)' }}>
+                <th style={{ padding: '0.75rem 1.25rem', fontWeight: 700, color: 'var(--text-bright)' }}>Isolated Challenge</th>
+                <th style={{ padding: '0.75rem 1.25rem', fontWeight: 700, color: 'var(--text-bright)' }}>Actionable Mitigation Solution</th>
+              </tr>
+            </thead>
+            <tbody>
+              {solutions && solutions.map((solPair, idx) => (
+                <tr key={idx} style={{ borderBottom: idx < solutions.length - 1 ? '1px solid var(--border-dim)' : 'none' }}>
+                  <td style={{ padding: '1rem 1.25rem', color: 'var(--text-muted)', verticalAlign: 'top', width: '50%' }}>{solPair.challenge}</td>
+                  <td style={{ padding: '1rem 1.25rem', color: 'var(--text-bright)', verticalAlign: 'top', width: '50%' }}>{solPair.solution}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
 

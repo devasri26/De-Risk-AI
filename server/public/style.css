@@ -3557,24 +3557,21 @@ transform: translateY(30px);
 .estimate-card {
   background: var(--bg-card);
   border: 1px solid var(--border-dim);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   padding: 1.5rem;
-  transition: var(--transition-normal);
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
   display: flex;
   flex-direction: column;
   gap: 0.85rem;
   position: relative;
   overflow: hidden;
   box-shadow: var(--shadow-premium);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
 }
 
 .estimate-card:hover {
-  transform: translateY(-4px);
-  border-color: var(--primary-color);
-  background: var(--bg-card-hover);
-  box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.5);
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
 }
 
 .estimate-header {
