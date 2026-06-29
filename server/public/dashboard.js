@@ -1,3 +1,17 @@
+// Value count-up animation helper function
+function animateValue(element, start, end, duration, suffix = "") {
+  if (!element) return;
+  const startTimestamp = performance.now();
+  const step = (timestamp) => {
+    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+    element.innerText = Math.floor(progress * (end - start) + start) + suffix;
+    if (progress < 1) {
+      window.requestAnimationFrame(step);
+    }
+  };
+  window.requestAnimationFrame(step);
+}
+
 // Toast helper function
 function showToast(message, type = "info") {
   const container = document.getElementById("toast-container");
@@ -385,9 +399,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const averageScore = totalAudits > 0 ? Math.round(sumScore / totalAudits) : 0;
 
-    if (statsTotalAudits) statsTotalAudits.innerText = totalAudits;
-    if (statsAvgScore) statsAvgScore.innerText = `${averageScore}%`;
-    if (statsTotalRisks) statsTotalRisks.innerText = sumRisks;
+    if (statsTotalAudits) animateValue(statsTotalAudits, 0, totalAudits, 400);
+    if (statsAvgScore) animateValue(statsAvgScore, 0, averageScore, 400, "%");
+    if (statsTotalRisks) animateValue(statsTotalRisks, 0, sumRisks, 400);
   }
 
   function renderHistoryList() {
