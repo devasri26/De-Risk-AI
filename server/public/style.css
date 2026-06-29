@@ -2,37 +2,37 @@
 
 :root {
   /* SaaS Deep Color System */
-  --bg-dark: hsl(222, 47%, 4%);
-  --bg-card: hsla(222, 47%, 9%, 0.55);
-  --bg-card-hover: hsla(222, 47%, 13%, 0.75);
-  --bg-input: hsla(222, 47%, 3%, 0.85);
-  --bg-sidebar: hsl(222, 47%, 5%);
+  --bg-dark: #0B0F19;
+  --bg-card: #161B22;
+  --bg-card-hover: #1e2530;
+  --bg-input: #0d1117;
+  --bg-sidebar: #0d1117;
   
-  --border-glow: hsla(250, 84%, 63%, 0.25);
-  --border-dim: hsla(217, 30%, 18%, 0.65);
-  --border-focus: hsl(250, 84%, 63%);
+  --border-glow: rgba(34, 197, 94, 0.1);
+  --border-dim: #30363D;
+  --border-focus: #22C55E;
   
-  --text-bright: hsl(210, 40%, 98%);
-  --text-muted: hsl(215, 20%, 65%);
-  --text-dim: hsl(215, 14%, 45%);
+  --text-bright: #F8FAFC;
+  --text-muted: #94A3B8;
+  --text-dim: #64748B;
   
-  --primary-color: hsl(250, 84%, 63%);
-  --primary-glow: hsla(250, 84%, 63%, 0.35);
+  --primary-color: #22C55E;
+  --primary-glow: rgba(34, 197, 94, 0.12);
   
   /* Status Colors */
-  --emerald-color: hsl(142, 76%, 45%);
-  --emerald-glow: hsla(142, 76%, 45%, 0.15);
-  --amber-color: hsl(38, 95%, 48%);
-  --amber-glow: hsla(38, 95%, 48%, 0.15);
-  --rose-color: hsl(346, 87%, 57%);
-  --rose-glow: hsla(346, 87%, 57%, 0.15);
+  --emerald-color: #22C55E;
+  --emerald-glow: rgba(34, 197, 94, 0.1);
+  --amber-color: #F59E0B;
+  --amber-glow: rgba(245, 158, 11, 0.1);
+  --rose-color: #EF4444;
+  --rose-glow: rgba(239, 68, 68, 0.1);
   
   /* Radii & Shadows */
-  --radius-lg: 20px;
-  --radius-md: 16px;
-  --radius-sm: 8px;
-  --shadow-premium: 0 20px 50px -12px rgba(0, 0, 0, 0.85);
-  --shadow-glow: 0 0 30px rgba(99, 102, 241, 0.2);
+  --radius-lg: 12px;
+  --radius-md: 8px;
+  --radius-sm: 4px;
+  --shadow-premium: 0 16px 40px -10px rgba(0, 0, 0, 0.7);
+  --shadow-glow: 0 0 20px rgba(34, 197, 94, 0.05);
   
   /* Transitions */
   --transition-normal: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -147,7 +147,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .accent-text {
-  background: linear-gradient(135deg, var(--primary-color), hsl(270, 84%, 60%));
+  background: linear-gradient(135deg, var(--primary-color), var(--amber-color));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -372,8 +372,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .profile-avatar {
-  background: linear-gradient(135deg, var(--primary-color), hsl(270, 84%, 60%));
-  color: #ffffff;
+  background: var(--primary-glow);
+  color: var(--primary-color);
+  border: 1px solid rgba(34, 197, 94, 0.2);
   width: 32px;
   height: 32px;
   border-radius: 50%;
@@ -770,14 +771,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--primary-color), #8b5cf6, #3b82f6);
-  background-size: 200% 200%;
-  animation: gradientShiftBtn 6s ease infinite;
-  color: var(--text-bright);
+  background: var(--primary-color);
+  color: #0B0F19;
   font-family: 'Outfit', sans-serif;
   font-weight: 600;
   font-size: 1rem;
-  border: none;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--radius-md);
   padding: 0.9rem 1.85rem;
   cursor: pointer;
@@ -1858,7 +1857,7 @@ body.auth-page {
   flex-direction: column;
   overflow: hidden;
   position: relative;
-  background: linear-gradient(-45deg, #05080f, #0c0f18, #180c29, #091726);
+  background: linear-gradient(-45deg, #05080f, #0c0f18, #101a14, #0b1c20);
   background-size: 400% 400%;
   animation: gradientBG 20s ease infinite;
 }
@@ -1877,7 +1876,7 @@ body.auth-page {
 .glow-indigo {
   width: 500px;
   height: 500px;
-  background: radial-gradient(circle, rgba(99, 102, 241, 0.25) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(34, 197, 94, 0.12) 0%, transparent 70%);
   top: -10%;
   left: -10%;
   animation: floatOrb1 35s infinite alternate ease-in-out;
@@ -1886,7 +1885,7 @@ body.auth-page {
 .glow-rose {
   width: 450px;
   height: 450px;
-  background: radial-gradient(circle, rgba(244, 63, 94, 0.22) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.1) 0%, transparent 70%);
   bottom: -10%;
   right: -10%;
   animation: floatOrb2 40s infinite alternate ease-in-out;
@@ -1896,7 +1895,7 @@ body.auth-page {
 .glow-cyan {
   width: 400px;
   height: 400px;
-  background: radial-gradient(circle, rgba(6, 182, 212, 0.18) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(239, 68, 68, 0.06) 0%, transparent 70%);
   top: 60%;
   left: -5%;
   animation: floatOrb3 30s infinite alternate ease-in-out;
@@ -1906,7 +1905,7 @@ body.auth-page {
 .glow-pink {
   width: 350px;
   height: 350px;
-  background: radial-gradient(circle, rgba(236, 72, 153, 0.15) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(34, 197, 94, 0.08) 0%, transparent 70%);
   top: -5%;
   right: 20%;
   animation: floatOrb4 32s infinite alternate ease-in-out;
@@ -1915,7 +1914,7 @@ body.auth-page {
 .glow-purple {
   width: 450px;
   height: 450px;
-  background: radial-gradient(circle, rgba(168, 85, 247, 0.2) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.08) 0%, transparent 70%);
   bottom: 50%;
   right: -10%;
   animation: floatOrb5 45s infinite alternate ease-in-out;
@@ -2022,16 +2021,18 @@ body.auth-page {
   border-radius: var(--radius-md);
   font-weight: 600;
   cursor: pointer;
-  background: linear-gradient(135deg, var(--primary-color), #8b5cf6, #3b82f6);
-  background-size: 200% 200%;
-  animation: gradientShiftBtn 6s ease infinite;
-  box-shadow: 0 4px 25px rgba(99, 102, 241, 0.35);
+  background: var(--primary-color);
+  color: #0B0F19;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 15px rgba(34, 197, 94, 0.2);
   transition: var(--transition-normal);
 }
 
 .auth-page .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(99, 102, 241, 0.5);
+  background: #16a34a;
+  color: #ffffff;
+  box-shadow: 0 8px 25px rgba(34, 197, 94, 0.35);
 }
 
 /* Ambient animations */
@@ -3012,8 +3013,8 @@ body.landing-page {
 
 .cta-card {
   position: relative;
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(244, 63, 94, 0.04) 100%);
-  border: 1px solid rgba(99, 102, 241, 0.2);
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.08) 0%, rgba(245, 158, 11, 0.02) 100%);
+  border: 1px solid rgba(34, 197, 94, 0.15);
   border-radius: var(--radius-lg);
   padding: 5rem 2rem;
   text-align: center;
@@ -3696,7 +3697,7 @@ transform: translateY(30px);
   width: 55vw;
   height: 55vw;
   top: -15vw; left: -15vw;
-  background: radial-gradient(circle at 30% 30%, var(--primary-color) 0%, hsla(260, 84%, 55%, 0.8) 40%, transparent 80%);
+  background: radial-gradient(circle at 30% 30%, var(--primary-color) 0%, rgba(34, 197, 94, 0.4) 40%, transparent 80%);
   animation: floatOrb1 28s infinite alternate ease-in-out;
 }
 
@@ -3704,7 +3705,7 @@ transform: translateY(30px);
   width: 48vw;
   height: 48vw;
   bottom: -8vw; right: -8vw;
-  background: radial-gradient(circle at 70% 70%, var(--emerald-color) 0%, hsla(190, 76%, 45%, 0.7) 40%, transparent 80%);
+  background: radial-gradient(circle at 70% 70%, var(--emerald-color) 0%, rgba(34, 197, 94, 0.3) 40%, transparent 80%);
   animation: floatOrb2 22s infinite alternate ease-in-out;
 }
 
@@ -3712,7 +3713,7 @@ transform: translateY(30px);
   width: 42vw;
   height: 42vw;
   top: 25%; left: 45%;
-  background: radial-gradient(circle at 40% 60%, var(--amber-color) 0%, hsla(346, 87%, 57%, 0.75) 45%, transparent 80%);
+  background: radial-gradient(circle at 40% 60%, var(--amber-color) 0%, rgba(245, 158, 11, 0.35) 45%, transparent 80%);
   animation: floatOrb3 32s infinite alternate ease-in-out;
 }
 
@@ -3720,7 +3721,7 @@ transform: translateY(30px);
   width: 38vw;
   height: 38vw;
   bottom: 30%; left: -10vw;
-  background: radial-gradient(circle at 50% 50%, var(--rose-color) 0%, hsla(280, 84%, 63%, 0.7) 40%, transparent 80%);
+  background: radial-gradient(circle at 50% 50%, var(--primary-color) 0%, rgba(34, 197, 94, 0.3) 40%, transparent 80%);
   animation: floatOrb4 26s infinite alternate ease-in-out;
 }
 

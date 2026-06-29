@@ -1151,8 +1151,8 @@ document.addEventListener("DOMContentLoaded", () => {
               {
                 label: 'After',
                 data: [successSim, riskSim, investorSim],
-                backgroundColor: 'rgba(99, 102, 241, 0.65)',
-                borderColor: 'hsl(250, 84%, 63%)',
+                backgroundColor: 'rgba(34, 197, 94, 0.65)',
+                borderColor: '#22C55E',
                 borderWidth: 1
               }
             ]
@@ -1237,7 +1237,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         card.addEventListener("click", () => {
           activeSimulation[item.key] = !activeSimulation[item.key];
-          card.style.background = activeSimulation[item.key] ? "rgba(99, 102, 241, 0.1)" : "rgba(255, 255, 255, 0.01)";
+          card.style.background = activeSimulation[item.key] ? "rgba(34, 197, 94, 0.08)" : "rgba(255, 255, 255, 0.01)";
           card.style.borderColor = activeSimulation[item.key] ? "var(--primary-color)" : "var(--border-dim)";
           updateSimulation();
         });
@@ -2112,8 +2112,8 @@ document.addEventListener("DOMContentLoaded", () => {
     let gradient = null;
     if (canvasContext) {
       gradient = canvasContext.createLinearGradient(0, 0, 0, 250);
-      gradient.addColorStop(0, 'rgba(99, 102, 241, 0.35)');
-      gradient.addColorStop(1, 'rgba(99, 102, 241, 0.0)');
+      gradient.addColorStop(0, 'rgba(34, 197, 94, 0.25)');
+      gradient.addColorStop(1, 'rgba(34, 197, 94, 0.0)');
     }
 
     trendChartInstance = new Chart(ctx, {
@@ -2123,15 +2123,15 @@ document.addEventListener("DOMContentLoaded", () => {
         datasets: [{
           label: 'Confidence Score',
           data: dataPoints,
-          borderColor: hasData ? 'hsl(250, 84%, 63%)' : 'rgba(255, 255, 255, 0.1)',
+          borderColor: hasData ? '#22C55E' : 'rgba(255, 255, 255, 0.1)',
           borderWidth: 2,
-          pointBackgroundColor: hasData ? 'hsl(250, 84%, 63%)' : 'transparent',
+          pointBackgroundColor: hasData ? '#22C55E' : 'transparent',
           pointBorderColor: '#ffffff',
           pointBorderWidth: hasData ? 1 : 0,
           pointRadius: hasData ? 4 : 0,
           pointHoverRadius: hasData ? 6 : 0,
           fill: true,
-          backgroundColor: hasData ? (gradient || 'rgba(99, 102, 241, 0.1)') : 'transparent',
+          backgroundColor: hasData ? (gradient || 'rgba(34, 197, 94, 0.08)') : 'transparent',
           tension: 0.35
         }]
       },
