@@ -26,6 +26,14 @@ function showToast(message, type = "info") {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  // Track mouse coordinates for interactive grid spotlight glow
+  document.addEventListener("mousemove", (e) => {
+    const x = ((e.clientX / window.innerWidth) * 100).toFixed(2);
+    const y = ((e.clientY / window.innerHeight) * 100).toFixed(2);
+    document.documentElement.style.setProperty("--mouse-x", `${x}%`);
+    document.documentElement.style.setProperty("--mouse-y", `${y}%`);
+  });
+
   // 1. Authenticated Router Guard
   const token = localStorage.getItem("token");
   const userStr = localStorage.getItem("user");

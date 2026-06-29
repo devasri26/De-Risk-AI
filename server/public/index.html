@@ -10,6 +10,9 @@
 </head>
 <body class="landing-page">
 
+  <!-- AI Interactive Spotlight Grid Background Overlay -->
+  <div class="bg-grid-overlay"></div>
+
   <!-- Ambient Glowing Background Circles -->
   <div class="ambient-glow-orb glow-indigo" style="opacity: 0.15; filter: blur(140px); width: 600px; height: 600px; top: -10%; left: -10%;"></div>
   <div class="ambient-glow-orb glow-rose" style="opacity: 0.08; filter: blur(140px); width: 500px; height: 500px; top: 40%; right: -5%;"></div>
@@ -310,6 +313,14 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
+      // Track mouse coordinates for interactive grid spotlight glow
+      document.addEventListener("mousemove", (e) => {
+        const x = ((e.clientX / window.innerWidth) * 100).toFixed(2);
+        const y = ((e.clientY / window.innerHeight) * 100).toFixed(2);
+        document.documentElement.style.setProperty("--mouse-x", `${x}%`);
+        document.documentElement.style.setProperty("--mouse-y", `${y}%`);
+      });
+
       // 1. Scroll Fade In Animation
       const faders = document.querySelectorAll(".scroll-fade-in");
       const appearOptions = {
