@@ -932,12 +932,12 @@ document.addEventListener("DOMContentLoaded", () => {
           datasets: [{
             label: 'Risk Level %',
             data: [technicalRisk, budgetRisk, marketRisk, scalabilityRisk, operationalRisk],
-            backgroundColor: 'rgba(244, 63, 94, 0.2)',
-            borderColor: 'hsl(346, 87%, 57%)',
-            pointBackgroundColor: 'hsl(346, 87%, 57%)',
-            pointBorderColor: '#ffffff',
-            pointHoverBackgroundColor: '#ffffff',
-            pointHoverBorderColor: 'hsl(346, 87%, 57%)',
+            backgroundColor: 'rgba(245, 158, 11, 0.15)',
+            borderColor: '#F59E0B',
+            pointBackgroundColor: '#F59E0B',
+            pointBorderColor: '#FAFAFA',
+            pointHoverBackgroundColor: '#FAFAFA',
+            pointHoverBorderColor: '#F59E0B',
             borderWidth: 2
           }]
         },
@@ -997,8 +997,9 @@ document.addEventListener("DOMContentLoaded", () => {
           stepEl.style.position = "relative";
           stepEl.style.animationDelay = `${index * 150}ms`;
 
-          const nodeColor = `hsl(${(index * 55) % 360}, 75%, 55%)`;
-          const nodeGlow = `hsla(${(index * 55) % 360}, 75%, 55%, 0.15)`;
+          const colorList = ['#22C55E', '#F59E0B', '#FAFAFA', '#A1A1AA'];
+          const nodeColor = colorList[index % colorList.length];
+          const nodeGlow = 'rgba(255, 255, 255, 0.05)';
 
           let taskHtml = "";
           if (Array.isArray(phaseData.tasks)) {
