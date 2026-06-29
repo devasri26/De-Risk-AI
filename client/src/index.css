@@ -706,3 +706,17 @@ h1, h2, h3, h4, h5, h6 {
     border-bottom: 1px solid var(--border-dim);
   }
 }
+
+/* AI Interactive Spotlight Grid Background Overlay */
+.bg-grid-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.005) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.005) 1px, transparent 1px);
+  background-size: 50px 50px;
+  pointer-events: none;
+  z-index: -1;
+  mask-image: radial-gradient(circle 350px at var(--mouse-x, 50%) var(--mouse-y, 50%), black 10%, rgba(0, 0, 0, 0.15) 50%, transparent 100%);
+  -webkit-mask-image: radial-gradient(circle 350px at var(--mouse-x, 50%) var(--mouse-y, 50%), black 10%, rgba(0, 0, 0, 0.15) 50%, transparent 100%);
+}

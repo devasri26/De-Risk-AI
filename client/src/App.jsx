@@ -63,6 +63,17 @@ export default function App() {
     }
   });
 
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      const x = ((e.clientX / window.innerWidth) * 100).toFixed(2);
+      const y = ((e.clientY / window.innerHeight) * 100).toFixed(2);
+      document.documentElement.style.setProperty("--mouse-x", `${x}%`);
+      document.documentElement.style.setProperty("--mouse-y", `${y}%`);
+    };
+    document.addEventListener("mousemove", handleMouseMove);
+    return () => document.removeEventListener("mousemove", handleMouseMove);
+  }, []);
+
   const handleAnalyzeIdea = async (ideaText) => {
     setIsAnalyzing(true);
     setError(null);
@@ -117,7 +128,8 @@ export default function App() {
 
   // Rebuilt Layout: Left Navigation Sidebar + Main Workspace
   return (
-    <div className="app-layout" style={{ display: 'flex', minHeight: '100vh', width: '100vw', background: 'var(--bg-dark)' }}>
+    <div className="app-layout" style={{ display: 'flex', minHeight: '100vh', width: '100vw', background: 'var(--bg-dark)', position: 'relative' }}>
+      <div className="bg-grid-overlay"></div>
       
       {/* Left Sidebar navigation panel */}
       {user && (
